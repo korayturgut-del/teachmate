@@ -1,0 +1,23 @@
+{
+  "name": "dijital-ogretmen-asistani",
+  "private": true,
+  "version": "1.0.0-doa",
+  "description": "🎓 Dijital Öğretmen Asistanı — AI destekli sınav okuma sistemi",
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "clean": "turbo clean",
+    "check-credentials": "bash tools/check-credentials.sh"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "pnpm": {
+    "neverBuiltDependencies": ["canvas"]
+  }
+}

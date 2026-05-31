@@ -1,0 +1,7 @@
+{
+  "name": "@doa/template-engine",
+  "version": "1.0.0-doa",
+  "private": true,
+  "main": "src/index.ts",
+  "description": "Sınav şablonu + versiyonlama (ADR-015). Her QR exam_id+version taşır; SHA-256 içerik hash'i ile çift basım tespiti."
+}

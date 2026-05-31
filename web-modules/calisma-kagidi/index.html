@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>📄 Çalışma Kağıdı — Dijital Öğretmen Asistanı</title>
+
+<!-- CDN -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<!-- Shared Design -->
+<link rel="stylesheet" href="../shared/css/design-system.css">
+<link rel="stylesheet" href="../shared/css/layout.css">
+<link rel="stylesheet" href="../shared/css/components.css">
+<link rel="stylesheet" href="../shared/css/enhance.css">
+<link rel="stylesheet" href="../shared/css/sekil-editor-max.css">
+
+<!-- Module CSS -->
+<link rel="stylesheet" href="css/calisma-kagidi.css">
+
+<style>
+/* Login screen (bağımsız modül için) */
+#login-screen{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:#0a0c12;
+  background-image:radial-gradient(at 20% 30%,rgba(20,184,166,0.15) 0px,transparent 50%),radial-gradient(at 80% 70%,rgba(56,168,216,0.1) 0px,transparent 50%);
+  color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:99999;font-family:'Inter',sans-serif;
+}
+.login-box{
+  background:rgba(22,27,34,0.95);padding:50px 60px;border-radius:24px;
+  border:1px solid rgba(255,255,255,0.08);text-align:center;
+  box-shadow:0 25px 80px -12px rgba(0,0,0,0.7);
+  backdrop-filter:blur(20px);max-width:420px;width:90%;
+}
+.login-box h1{font-size:56px;margin-bottom:8px;filter:drop-shadow(0 0 20px rgba(20,184,166,.5))}
+.login-box h2{font-size:1.3rem;font-weight:700;margin-bottom:4px;
+  background:linear-gradient(135deg,#fff 0%,#8b949e 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.login-box .login-sub{color:#8b949e;margin-bottom:30px;font-size:.85rem}
+.login-box .login-ver{color:#484f58;font-size:.7rem;margin-top:20px}
+.login-user-info{
+  margin-top:16px;padding:14px;border-radius:12px;
+  background:rgba(20,184,166,0.08);border:1px solid rgba(20,184,166,0.2);
+  display:none;
+}
+.login-user-info .user-name{font-weight:700;font-size:1rem;color:#f0f6fc}
+.login-user-info .user-email{font-size:.8rem;color:#8b949e;margin-top:2px}
+#login-error{display:none;margin-top:14px;padding:12px;border-radius:10px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#ef4444;font-size:.82rem}
+</style>
+</head>
+<body>
+
+<!-- ======== LOGIN SCREEN ======== -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>📄</h1>
+    <h2>Çalışma Kağıdı</h2>
+    <p class="login-sub">Devam etmek için Google hesabınızla giriş yapın.</p>
+    <div id="google-login-btn" style="display:flex;justify-content:center"></div>
+        <div style="margin-top:14px;text-align:center">
+      <button onclick="directLogin()" style="background:transparent;border:1px dashed rgba(255,255,255,0.15);color:rgba(255,255,255,0.35);padding:7px 24px;border-radius:20px;cursor:pointer;font-size:.75rem;font-family:inherit;transition:all .2s" onmouseover="this.style.borderColor='rgba(255,255,255,0.4)';this.style.color='rgba(255,255,255,0.6)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(255,255,255,0.35)'">🔓 Doğrudan Giriş</button>
+    </div>
+        
+    <div id="login-error">❌ Giriş başarısız. Lütfen tekrar deneyin.</div>
+    <div class="login-user-info" id="login-user-info">
+      <div class="user-name" id="login-user-name"></div>
+      <div class="user-email" id="login-user-email"></div>
+    </div>
+    <div class="login-ver">V.PRO — Koray Turgut © 2026</div>
+  </div>
+</div>
+
+<!-- ======== MAIN APP ======== -->
+<div id="main-app" style="display:none">
+
+  <div class="app-container">
+    <header class="topbar">
+      <button class="back-btn" onclick="location.href='../index.html'">←</button>
+      <span class="topbar-title">📄 Çalışma Kağıdı</span>
+      <div style="flex:1"></div>
+      <div class="user-badge" id="topbar-user">
+        <img id="topbar-avatar" src="" alt="">
+        <span class="uname" id="topbar-name"></span>
+        <button class="logout-btn" onclick="doLogout()">Çıkış</button>
+      </div>
+      <div class="theme-toggle" onclick="toggleTheme()" data-tip="Tema">
+        <div class="theme-toggle-track"></div>
+        <span class="theme-icon theme-icon-moon">🌙</span>
+        <span class="theme-icon theme-icon-sun">☀️</span>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <!-- Başlık satırı -->
+      <div class="card" style="margin-bottom:12px;padding:12px 16px">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="font-weight:700;font-size:.95rem" id="calisma-title-display">Çalışma Kağıdı</div>
+          <div style="color:var(--text3);font-size:.8rem" id="calisma-meta-display"></div>
+          <div style="flex:1"></div>
+          <button class="btn btn-ghost btn-sm" onclick="newCalisma()" data-tip="Yeni çalışma kağıdı başlat">🆕 Yeni</button>
+          <button class="btn btn-ghost btn-sm" onclick="saveCalismaToFile()" data-tip="Dosyaya kaydet (bilgisayar)">💾 Kaydet</button>
+                <button class="btn btn-ghost btn-xs" onclick="clkLoadFromCloud()" data-tip="Buluttan .clk çalışma kağıdı çek" style="color:var(--blue)">☁️ Buluttan Çek</button>
+                <button class="btn btn-ghost btn-xs" onclick="clkSaveToCloud()" data-tip="Çalışma kağıdını buluta .clk olarak kaydet" style="color:var(--accent)">☁️ Buluta Kaydet</button>
+          <button class="btn btn-ghost btn-sm" onclick="loadCalismaFromFile()" data-tip="Dosyadan yükle (bilgisayar)">📂 Dosyadan Yükle</button>
+          <div class="we-div" style="height:24px"></div>
+          <button class="btn btn-ghost btn-sm" onclick="doPreviewCalisma()">👁️ Önizle</button>
+          <button class="btn btn-primary btn-sm" onclick="doPrintCalisma()">🖨️ Yazdır / PDF</button>
+        </div>
+      </div>
+
+      <!-- Soru ekleme toolbar -->
+      <div class="card" style="margin-bottom:12px;padding:10px 14px">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="font-size:.78rem;font-weight:700;color:var(--text2)">Ekle:</span>
+          <button class="btn btn-primary btn-sm" data-tip="Çoktan seçmeli soru ekle" onclick="addQuestionCalisma('mc')">🔵 Çoktan Seçmeli</button>
+          <button class="btn btn-ghost btn-sm" data-tip="Açık uçlu soru ekle" onclick="addQuestionCalisma('open')">📝 Açık Uçlu</button>
+          <button class="btn btn-ghost btn-sm" data-tip="Boşluk doldurma sorusu ekle" onclick="addQuestionCalisma('fill')">✏️ Boşluk Doldurma</button>
+          <button class="btn btn-ghost btn-sm" data-tip="Bölüm başlığı / ayırıcı ekle" onclick="addSectionCalisma()" style="color:var(--amber);border-color:rgba(245,158,11,.3)">📌 Bölüm Başlığı</button>
+          <div class="we-div"></div>
+          <button class="btn btn-ghost btn-sm" data-tip="Tüm soruları temizle" onclick="clearAllQuestionsCalisma()" style="color:var(--red)">🗑️ Temizle</button>
+        </div>
+      </div>
+
+      <!-- ÇIKTI SEÇENEKLERİ -->
+      <div style="display:grid;grid-template-columns:320px 1fr;gap:16px;margin-bottom:16px">
+        <div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:12px">📐 Sayfa Seçenekleri</div>
+            
+            <div>
+              <label class="lbl">📐 Açık Uçlu Cevap Alanı</label>
+              <label class="cbwrap"><input type="checkbox" id="opt-lines"> Kareli ızgara ekle</label>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:6px" id="lines-count-wrap">
+                <span style="font-size:.78rem;color:var(--text2)">Yükseklik (satır sayısı):</span>
+                <input type="number" id="opt-lines-count" min="2" max="30" value="6"
+                  style="width:58px;padding:4px 8px;border-radius:5px;background:var(--bg2);border:1px solid var(--border);color:var(--text);text-align:center"
+                  oninput="saveS()">
+                <span style="font-size:.72rem;color:var(--text3)">≈ kare satırı</span>
+              </div>
+            </div>
+
+            <div class="sep"></div>
+            <div class="lbl" style="margin-bottom:6px">📐 Kenar Boşluğu</div>
+            <div class="col-picker">
+              <div class="col-btn" id="mar-dar" onclick="setMargin('dar')">Dar<br><span style="font-size:.6rem;font-weight:400">5mm</span></div>
+              <div class="col-btn active" id="mar-normal" onclick="setMargin('normal')">Normal<br><span style="font-size:.6rem;font-weight:400">13mm</span></div>
+              <div class="col-btn" id="mar-genis" onclick="setMargin('genis')">Geniş<br><span style="font-size:.6rem;font-weight:400">20mm</span></div>
+            </div>
+
+            <div style="font-size:.72rem;color:var(--text3);padding:4px 0">ℹ️ Resimler sütun genişliğine otomatik uyar.</div>
+
+            <div class="sep"></div>
+            <div class="lbl" style="margin-bottom:6px">📄 Sütun Düzeni</div>
+            <div class="col-picker">
+              <div class="col-btn active" id="col-1" onclick="setSutun(1)">1 Sütun</div>
+              <div class="col-btn" id="col-2" onclick="setSutun(2)">2 Sütun</div>
+              <div class="col-btn" id="col-3" onclick="setSutun(3)">3 Sütun</div>
+            </div>
+
+            <div class="sep"></div>
+            <div class="lbl" style="margin-bottom:6px">Sütun Ayracı</div>
+            <div class="col-picker">
+              <div class="col-btn active" id="cr-none" onclick="setColRule('none')">Yok</div>
+              <div class="col-btn" id="cr-line" onclick="setColRule('line')">─────</div>
+              <div class="col-btn" id="cr-dash" onclick="setColRule('dash')">- - -</div>
+            </div>
+
+            <div class="sep"></div>
+            <div><label class="lbl">Sütunlar Arası Yazı</label><input class="inp inp-sm" id="col-text" placeholder="✦ veya boş" oninput="saveS()"></div>
+
+            <div class="sep"></div>
+            <div><label class="lbl">Filigran Metni</label><input class="inp inp-sm" id="filigran-txt" placeholder="GİZLİ" oninput="saveS()"></div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+              <span style="font-size:.75rem;color:var(--text2)">Opaklık:</span>
+              <input type="range" min="2" max="40" value="8" id="filigran-op" style="flex:1;accent-color:var(--blue)" oninput="saveS()">
+              <span style="font-size:.72rem;color:var(--text2);width:28px" id="fil-op-val">8%</span>
+            </div>
+
+            <div class="sep"></div>
+            <div class="lbl" style="margin-bottom:6px">📋 Cevap Anahtarı</div>
+            <label class="cbwrap"><input type="radio" name="ca-calisma" value="none" checked onchange="saveS()"> Yok</label>
+            <label class="cbwrap"><input type="radio" name="ca-calisma" value="page" onchange="saveS()"> Her sayfanın altına</label>
+            <label class="cbwrap"><input type="radio" name="ca-calisma" value="end" onchange="saveS()"> En sona ayrı sayfa</label>
+
+            <div class="sep" style="margin:10px 0 8px"></div>
+            <div class="lbl" style="margin-bottom:6px">🧩 Akıllı Yerleşim</div>
+            <label class="cbwrap"><input type="checkbox" id="opt-smart-calisma" onchange="saveS()"> Akıllı yerleşim (boşlukları azalt)</label>
+            <div style="font-size:.72rem;color:var(--text3);margin-top:4px">Sorular sütunlara dengeli dağıtılır, orphan soru bırakmaz.</div>
+          </div>
+        </div>
+
+        <div>
+          <!-- Soru listesi -->
+          <div id="qlist-wrap-calisma" class="qlist-wrap"></div>
+          <div id="q-empty-calisma" class="alert alert-info" style="display:none;margin-top:8px">
+            ℹ️ Henüz soru eklenmedi. Yukarıdan soru türü seçin.
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Soru düzenleme paneli (fixed drawer) -->
+<div id="qedit-panel">
+  <div class="qedit-inner">
+    <div class="qedit-header">
+      <div style="font-weight:700;font-size:.9rem" id="qedit-title">Soru Düzenle</div>
+      <div class="ml-a fx g2">
+        <input type="text" id="qedit-aciklama" placeholder="Kazanım / açıklama..." style="width:180px;padding:4px 8px;border-radius:6px;background:var(--bg0);border:1px solid var(--border);color:var(--text);font-size:.75rem" onchange="qeditSaveAciklama()" oninput="qeditSaveAciklama()" data-tip="Soru açıklaması (baskıda görünür)">
+        <input type="number" id="qedit-puan" min="0" max="200" value="5" style="width:60px;text-align:center;padding:4px 8px;border-radius:6px;background:var(--bg0);border:1px solid var(--border);color:var(--text);font-weight:700" onchange="qeditSavePuan()" data-tip="Soru puanı">
+        <span style="font-size:.75rem;color:var(--text2);align-self:center">puan</span>
+        <button class="icon-btn" onclick="toggleQEditMode()" id="qedit-mode-btn" data-tip="Tam Ekran" style="width:28px;height:28px;font-size:.85rem">⛶</button>
+        <button class="btn btn-success btn-xs" onclick="qeditSaveAndClose()" style="background:var(--green);border-color:var(--green);font-weight:700">✅ Kaydet</button>
+        <button class="btn btn-danger btn-xs" onclick="closeQEdit()">✕ Kapat</button>
+      </div>
+    </div>
+    <div class="qedit-scroll" id="qedit-body-wrap">
+      <!-- Word processor -->
+      <div class="we-wrap" id="we-wrap">
+        <div class="we-toolbar" id="we-tb1">
+          <select class="sel" id="we-font" onmousedown="weSave()" onchange="weExec('fontName',this.value)" style="max-width:130px">
+            <option value="inherit">Varsayılan</option>
+            <option value="'Times New Roman',serif">Times New Roman</option>
+            <option value="Arial,sans-serif">Arial</option>
+            <option value="'Courier New',monospace">Courier New</option>
+            <option value="Georgia,serif">Georgia</option>
+          </select>
+          <input type="number" class="sel" id="we-size" min="2" max="200" value="12" 
+            style="width:60px;text-align:center;padding:4px 6px" 
+            onmousedown="weSave()"
+            onfocus="this.select()"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();weApplyFontSize(this.value);}"
+            onchange="weApplyFontSize(this.value)"
+            placeholder="12pt">
+          <span style="font-size:.7rem;color:var(--text3);align-self:center">pt</span>
+          <div class="we-div"></div>
+          <button class="we-btn" onmousedown="weSave()" onclick="weExec('bold')" data-tip="Kalın (Ctrl+B)"><b>B</b></button>
+          <button class="we-btn" onmousedown="weSave()" onclick="weExec('italic')" data-tip="İtalik (Ctrl+I)"><i>I</i></button>
+          <button class="we-btn" onmousedown="weSave()" onclick="weExec('underline')" data-tip="Altı Çizili"><u>U</u></button>
+          <button class="we-btn" onmousedown="weSave()" onclick="weExec('strikeThrough')" data-tip="Üstü Çizili"><s>S</s></button>
+          <button class="we-btn" onmousedown="weSave()" onclick="weExec('superscript')" data-tip="Üst Simge" style="font-size:.72rem">x²</button>
+          <button class="we-btn" onmousedown="weSave()" onclick="weExec('subscript')" data-tip="Alt Simge" style="font-size:.72rem">x₂</button>
+          <div class="we-div"></div>
+          <button class="we-btn" onmousedown="weSave()" onclick="weExec('justifyLeft')" data-tip="Sola Hizala">◀▬</button>
+          <button class="we-btn" onmousedown="weSave()" onclick="weExec('justifyCenter')" data-tip="Ortala">▬▬</button>
+          <button class="we-btn" onmousedown="weSave()" onclick="weExec('justifyRight')" data-tip="Sağa Hizala">▬▶</button>
+          <div class="we-div"></div>
+          <input type="color" value="#000000" onmousedown="weSave()" onchange="weExec('foreColor',this.value)" data-tip="Yazı Rengi" style="width:20px;height:20px;border-radius:4px;border:1px solid var(--border);cursor:pointer;padding:0">
+          <input type="color" value="#ffff00" onmousedown="weSave()" onchange="weExec('hiliteColor',this.value)" data-tip="Vurgulama Rengi" style="width:20px;height:20px;border-radius:4px;border:1px solid var(--border);cursor:pointer;padding:0">
+          <div class="we-div"></div>
+          <button class="we-btn" onclick="document.execCommand('undo')" data-tip="Geri Al (Ctrl+Z)" style="color:var(--green)">↩</button>
+          <button class="we-btn" onclick="document.execCommand('redo')" data-tip="İleri Al (Ctrl+Y)" style="color:var(--green)">↪</button>
+          <button class="we-btn" onclick="weExec('removeFormat')" data-tip="Formatı Temizle" style="color:var(--red);font-size:.72rem">✕fmt</button>
+          <div class="we-div"></div>
+          <button class="we-btn" onclick="idOpenBlank()" data-tip="Boş çizim alanı ekle" style="color:var(--green);font-size:.72rem">✏️ Şekil</button>
+        </div>
+        <div class="we-toolbar" id="we-tb2">
+          <div class="fx g2" style="margin-right:6px">
+            <button id="we-tab-mat" class="we-tab on" onmousedown="weTabSwitch('mat',event)">∑ Mat</button>
+            <button id="we-tab-fiz" class="we-tab" onmousedown="weTabSwitch('fiz',event)">⚡ Fiz</button>
+            <button id="we-tab-kim" class="we-tab" onmousedown="weTabSwitch('kim',event)">⚗ Kim</button>
+          </div>
+          <div id="we-sym-btns" style="display:flex;gap:2px;flex-wrap:wrap"></div>
+        </div>
+        <div id="we-area" contenteditable="true" spellcheck="false"
+          onblur="qeditSaveText()"
+          onpaste="weHandlePaste(event)"></div>
+      </div>
+      <!-- Şıklar + dosya ekleme -->
+      <div id="qedit-body" style="margin-top:14px"></div>
+    </div>
+    <div class="qedit-footer">
+      <div style="display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap">
+        <label style="font-size:.75rem;color:var(--text2)">Boşluk:</label>
+        <input type="range" id="qedit-bosluk" min="0" max="10" value="0" style="width:80px;accent-color:var(--blue)" oninput="qeditSaveBosluk();document.getElementById('bosluk-val').textContent=this.value">
+        <span id="bosluk-val" style="font-size:.72rem;color:var(--text2);width:14px">0</span>
+        <label class="inp inp-sm" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;width:auto;padding:4px 10px" data-tip="Resim ekle">
+          📷 Resim
+          <input type="file" accept="image/*" style="display:none" onchange="qAddImgFile(this)">
+        </label>
+      </div>
+      <button class="btn btn-ghost btn-xs" onclick="qEditNav(-1)" data-tip="Önceki Soru">◀</button>
+      <button class="btn btn-ghost btn-xs" onclick="qEditNav(1)" data-tip="Sonraki Soru">▶</button>
+    </div>
+  </div>
+</div>
+
+<!-- Print output (gizli) -->
+<div id="print-output" style="display:none"></div>
+
+<!-- ======== SCRIPTS ======== -->
+<script src="../shared/js/utils.js"></script>
+<script src="../shared/js/auth-globals.js"></script>
+<script src="../shared/js/student-cloud.js"></script>
+<script src="../shared/js/sync.js"></script>
+<script src="../shared/js/app-core.js"></script>
+<script src="../shared/js/sekil-editor-max.js"></script>
+<script src="js/calisma-kagidi.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var th = localStorage.getItem('kelebek_theme');
+  if (th) document.documentElement.setAttribute('data-theme', th);
+  if (typeof initGoogleAuth === 'function') initGoogleAuth();
+});
+function toggleTheme(){
+  var cur = document.documentElement.getAttribute('data-theme');
+  var next = cur === 'light' ? '' : 'light';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('kelebek_theme', next); } catch(e){}
+}
+</script>
+
+</body>
+</html>

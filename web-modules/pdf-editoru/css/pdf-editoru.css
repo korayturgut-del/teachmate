@@ -1,0 +1,55 @@
+/* ============================================================
+   PDF EDİTÖRÜ MODÜLÜ CSS — Kelebek Platform V2
+   ============================================================ */
+
+.pdf-page{max-width:1000px;margin:0 auto;padding:24px}
+
+/* ── Settings Grid ── */
+.pdf-settings{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.pdf-setting-group{padding:14px;background:var(--glass);border:1px solid var(--border);border-radius:10px}
+.pdf-setting-group .pdf-setting-title{font-size:.78rem;font-weight:700;color:var(--text2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.pdf-opt-row{display:flex;gap:4px;margin-bottom:6px;flex-wrap:wrap}
+.pdf-opt-btn{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:.78rem;cursor:pointer;transition:all .15s;font-family:inherit}
+.pdf-opt-btn:hover{background:var(--bg3);border-color:var(--border2)}
+.pdf-opt-btn.active{background:var(--accent);color:white;border-color:var(--accent)}
+
+/* ── Summary ── */
+.pdf-summary{padding:14px;background:var(--glass);border:1px solid var(--border);border-radius:10px;margin-bottom:16px}
+
+/* ── Actions ── */
+.pdf-actions{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.pdf-actions button{padding:10px 18px;font-weight:600}
+
+/* ── Print Page Styles ── */
+.ppage{font-family:Arial,sans-serif;font-size:10pt;color:#000;line-height:1.5;position:relative}
+.p-school{text-align:center;font-size:10pt;font-weight:700;margin-bottom:2pt}
+.p-box{display:flex;justify-content:space-between;align-items:flex-start;margin:12pt 0;border:1pt solid #aaa;padding:8pt 12pt;border-radius:4pt}
+.p-name{font-weight:800;font-size:11pt}
+.p-info{font-size:8pt;color:#555;margin-top:2pt}
+.p-etitle{text-align:center;font-size:14pt;font-weight:800;margin:12pt 0 4pt;color:#1a56db}
+.p-emeta{text-align:center;font-size:8pt;color:#888;margin-bottom:8pt}
+.p-div{border:none;border-top:2pt solid #333;margin:8pt 0}
+.p-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-25deg);font-size:60pt;font-weight:900;color:#ccc;pointer-events:none;white-space:nowrap;z-index:0}
+
+/* ── Question Styles (Print) ── */
+.pq{margin-bottom:12pt;padding-left:4pt}
+.pq.fullwidth{margin-bottom:20pt}
+.pq-section-title{font-size:11pt;font-weight:700;color:#f59e0b;margin:14pt 0 8pt;border-bottom:1.5pt solid #f59e0b;padding-bottom:3pt}
+.pq-n{font-weight:700;font-size:10pt;margin-right:4pt}
+.pq-p{font-size:7pt;color:#aaa}
+.pq-t{line-height:1.6;margin-bottom:6pt}
+.pq-t img,.pq-imgs img{display:block;width:100%;height:auto;max-width:100%;object-fit:contain;border:1px solid #ddd;margin:4pt 0}
+.pq-imgs{margin:8pt 0}
+.pq-opts{display:flex;flex-direction:column;gap:2pt;margin-top:6pt}
+.pq-opt{border:1pt solid #e5e7eb;padding:3pt 8pt;border-radius:3pt;font-size:9pt}
+.pq-grid{background:repeating-linear-gradient(transparent,transparent 5.8mm,#e5e7eb 5.8mm,#e5e7eb 6mm);margin-top:4pt;border:1pt solid #e5e7eb;border-radius:3pt}
+.pq-container.cols-1{column-count:1}
+.pq-container.cols-2{column-count:2;column-gap:28pt}
+.pq-container.cols-3{column-count:3;column-gap:20pt}
+.pq-col-rule{column-rule:1pt solid #ccc}
+.pq-col-rule-dash{column-rule:1pt dashed #ccc}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .pdf-settings{grid-template-columns:1fr}
+}

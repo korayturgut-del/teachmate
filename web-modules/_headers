@@ -1,0 +1,11 @@
+# Cloudflare Pages başlıkları
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/shared/css/*
+  Cache-Control: public, max-age=3600
+
+/shared/js/*
+  Cache-Control: public, max-age=3600

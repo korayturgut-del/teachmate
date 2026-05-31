@@ -1,0 +1,111 @@
+/* ===== Z-KİTAP MODÜLÜ CSS ==== */
+
+/* Card Grid */
+.zcards-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;
+}
+
+/* Z-Kitap Card */
+.zk-card{
+  background:var(--glass);backdrop-filter:blur(4px);border:1px solid var(--border);
+  border-radius:12px;cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;display:flex;flex-direction:column;height:260px;
+}
+.zk-card:hover{border-color:var(--accent);background:rgba(20,184,166,0.08);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.zk-card.has-drawing{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}
+.zk-card-num{
+  padding:10px 14px;font-size:.78rem;font-weight:800;color:var(--text2);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0;
+}
+.zk-badge{font-size:.65rem;padding:2px 8px;border-radius:10px;font-weight:700}
+.zk-badge.mc{background:rgba(20,184,166,0.12);color:var(--accent)}
+.zk-badge.open{background:rgba(34,197,94,0.12);color:var(--green)}
+.zk-badge.fill{background:rgba(167,139,250,0.12);color:var(--purple)}
+.zk-badge.sec{background:rgba(245,158,11,0.12);color:var(--amber)}
+.zk-draw-indicator{margin-left:auto;font-size:.7rem;color:var(--green)}
+.zk-card-body{flex:1;overflow:hidden;padding:10px 14px;font-size:.8rem;color:var(--text2);line-height:1.5}
+.zk-card-body img{max-width:100%;height:auto;border-radius:4px;margin-top:4px}
+.zk-card-img{flex:1;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#f0f0f0;padding:4px}
+.zk-card-img img{max-width:100%;max-height:100%;object-fit:contain}
+
+/* Tool Buttons */
+.zk-tool-btn{
+  flex:1;padding:6px 4px;border-radius:6px;border:1px solid var(--border);
+  background:var(--glass);color:var(--text2);cursor:pointer;font-size:.72rem;
+  font-weight:600;transition:all .15s;text-align:center;
+}
+.zk-tool-btn:hover{border-color:var(--border2);color:var(--text)}
+.zk-tool-btn.active{background:rgba(20,184,166,0.12);border-color:var(--accent);color:var(--accent)}
+
+/* Color Dots */
+.zk-color-dot{
+  width:26px;height:26px;border-radius:50%;cursor:pointer;
+  border:2px solid transparent;transition:all .15s;
+  box-shadow:0 1px 4px rgba(0,0,0,.3);
+}
+.zk-color-dot:hover{transform:scale(1.15)}
+.zk-color-dot.active{border-color:var(--text);box-shadow:0 0 0 2px var(--accent),0 2px 8px rgba(0,0,0,.4)}
+
+/* Mini Nav */
+.zk-mini-btn{
+  width:32px;height:32px;border-radius:6px;border:1px solid var(--border);
+  background:var(--glass);color:var(--text2);cursor:pointer;font-size:.72rem;
+  font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .15s;
+}
+.zk-mini-btn:hover{border-color:var(--border2)}
+.zk-mini-btn.current{background:rgba(20,184,166,0.12);border-color:var(--accent);color:var(--accent)}
+.zk-mini-btn.has-draw{border-color:var(--green);color:var(--green)}
+
+/* Fullscreen Question Display */
+#zk-question-display .zk-q-section{font-size:1.3rem;font-weight:800;color:#d97706;margin:20px 0 10px;border-bottom:2px solid #d97706;padding-bottom:6px}
+#zk-question-display .zk-q-text{margin-bottom:12px}
+#zk-question-display .zk-q-text img{max-width:100%;border:1px solid #ddd;border-radius:6px;margin:8px 0}
+#zk-question-display .zk-q-opts{margin:10px 0 0 8px}
+#zk-question-display .zk-q-opt{margin:6px 0;font-size:1.05rem;display:flex;gap:8px;align-items:flex-start}
+#zk-question-display .zk-q-opt b{color:#0e7c86;min-width:24px}
+#zk-question-display .zk-q-images img{max-width:100%;border:1px solid #ddd;border-radius:6px;margin:8px 0;display:block}
+
+/* PDF Crop */
+#zk-pdf-canvas-wrap{user-select:none;-webkit-user-select:none}
+#zk-pdf-canvas{display:block}
+.zk-pdf-tab{
+  padding:6px 14px;border-radius:6px 6px 0 0;border:1px solid var(--border);border-bottom:none;
+  background:var(--glass);color:var(--text2);cursor:pointer;font-size:.72rem;font-weight:600;
+  white-space:nowrap;transition:all .15s;display:flex;align-items:center;gap:6px;
+}
+.zk-pdf-tab:hover{background:var(--glass2);color:var(--text)}
+.zk-pdf-tab.active{background:rgba(20,184,166,0.12);color:var(--accent);border-color:var(--accent)}
+.zk-pdf-tab .zk-tab-close{font-size:.6rem;opacity:.5;cursor:pointer;padding:2px}
+.zk-pdf-tab .zk-tab-close:hover{opacity:1;color:var(--red)}
+
+/* Crop Previews */
+.zk-crop-preview{
+  display:inline-flex;flex-direction:column;align-items:center;border:2px solid var(--green);border-radius:6px;
+  cursor:pointer;transition:all .2s;position:relative;overflow:hidden;flex-shrink:0;
+}
+.zk-crop-preview:hover{border-color:var(--accent);transform:scale(1.05)}
+.zk-crop-preview img{display:block;height:70px;width:auto}
+.zk-crop-preview .zk-crop-num{
+  position:absolute;top:2px;left:2px;background:rgba(0,0,0,.75);color:#fff;
+  font-size:.6rem;font-weight:700;padding:1px 5px;border-radius:4px;
+}
+.zk-crop-preview .zk-crop-del{
+  position:absolute;top:2px;right:2px;background:rgba(239,68,68,.85);color:#fff;
+  font-size:.55rem;font-weight:700;padding:1px 4px;border-radius:4px;cursor:pointer;display:none;
+}
+.zk-crop-preview:hover .zk-crop-del{display:block}
+
+/* Extra PDF canvas */
+.zk-pdf-extra-canvas{box-shadow:0 2px 12px rgba(0,0,0,.4);cursor:pointer;flex-shrink:0;opacity:0.7;transition:opacity .2s;border:2px solid transparent;border-radius:4px}
+
+/* Responsive */
+@media(max-width:768px){
+  #zk-panel{position:absolute!important;right:0;top:0;bottom:0;z-index:20;box-shadow:-4px 0 24px rgba(0,0,0,.5)}
+  .zcards-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))!important}
+  .zk-card{height:200px}
+  #zk-question-display{padding:16px!important;font-size:1rem!important}
+}
+@media(max-width:480px){
+  .zcards-grid{grid-template-columns:1fr!important}
+  .zk-card{height:180px}
+}

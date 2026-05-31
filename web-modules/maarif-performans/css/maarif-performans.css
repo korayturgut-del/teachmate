@@ -1,0 +1,561 @@
+/* ============================================================
+   MAARİF PERFORMANS — STİL (maarif-performans.css)
+   Dijital Öğretmen Asistanı tasarım sistemine uyumlu.
+   Renkler shared/css/design-system.css değişkenlerinden gelir.
+   ============================================================ */
+
+/* ── Düzen ───────────────────────────────────────────────── */
+.perf-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+@media (max-width: 860px) {
+  .perf-layout { grid-template-columns: 1fr; }
+}
+
+.perf-panel {
+  background: var(--bg1);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 14px;
+}
+
+.perf-panel-title {
+  font-size: .82rem;
+  font-weight: 800;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 10px;
+}
+
+/* ── Öğrenci paneli ──────────────────────────────────────── */
+.perf-select {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: .85rem;
+  margin-bottom: 10px;
+}
+
+.perf-student-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.perf-student-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 11px;
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  cursor: pointer;
+  transition: all .15s;
+}
+.perf-student-item:hover {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+.perf-student-item.active {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.perf-student-no {
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--text3);
+  min-width: 28px;
+}
+.perf-student-name {
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ── Not defteri kartları ────────────────────────────────── */
+.perf-grade-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.perf-card {
+  background: var(--bg2);
+  border: 2px solid var(--border);
+  border-radius: var(--r2);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 180px;
+}
+
+.perf-card-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.perf-card-icon { font-size: 1.1rem; }
+.perf-card-label {
+  font-weight: 700;
+  font-size: .8rem;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.perf-card-x {
+  background: transparent;
+  border: none;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: .85rem;
+  padding: 2px 4px;
+}
+.perf-card-x:hover { color: var(--red); }
+
+.perf-card-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.perf-card-score {
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+.perf-card-empty { color: var(--text3); opacity: .4; font-size: 1.6rem; }
+.perf-card-src {
+  font-size: .62rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-top: 3px;
+}
+
+.perf-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.perf-card-actions .btn { width: 100%; justify-content: center; }
+.btn-sm { padding: 6px 10px; font-size: .72rem; }
+
+/* ── Dönem ortalaması ────────────────────────────────────── */
+.perf-grade-avg {
+  margin-top: 14px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 12px 14px;
+}
+.perf-avg-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.perf-avg-label { font-size: .82rem; color: var(--text2); font-weight: 600; }
+.perf-avg-value { font-size: 1.8rem; font-weight: 900; line-height: 1; }
+.perf-avg-note {
+  font-size: .7rem;
+  color: var(--text3);
+  margin-top: 4px;
+  text-align: center;
+}
+
+/* ── Boş durum ───────────────────────────────────────────── */
+.perf-empty {
+  text-align: center;
+  color: var(--text3);
+  font-size: .85rem;
+  padding: 30px 16px;
+  line-height: 1.6;
+}
+.perf-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 700;
+}
+.perf-link:hover { text-decoration: underline; }
+
+/* ── Modal ───────────────────────────────────────────────── */
+.perf-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .8);
+  z-index: 9999;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+}
+.perf-modal-full {
+  background: var(--bg0);
+  flex-direction: column;
+}
+.perf-modal-box {
+  background: var(--bg1);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  width: 100%;
+  margin: 24px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.perf-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 18px;
+  border-bottom: 2px solid var(--accent);
+  font-weight: 800;
+  font-size: .92rem;
+  color: var(--text);
+  position: sticky;
+  top: 0;
+  background: var(--bg1);
+  z-index: 5;
+}
+.perf-modal-x {
+  background: var(--red);
+  border: none;
+  color: #fff;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.perf-modal-body { padding: 16px 18px; }
+.perf-modal-foot {
+  display: flex;
+  gap: 8px;
+  padding: 14px 18px;
+  border-top: 1px solid var(--border);
+  position: sticky;
+  bottom: 0;
+  background: var(--bg1);
+}
+
+/* ── Form elemanları ─────────────────────────────────────── */
+.perf-label {
+  display: block;
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--text2);
+  margin-bottom: 5px;
+}
+.perf-input {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--bg2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: .85rem;
+}
+.perf-input-big {
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-align: center;
+  border-width: 2px;
+}
+.perf-input-sm { width: 64px; padding: 5px 8px; text-align: center; }
+.perf-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px 12px;
+  background: var(--bg2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: .85rem;
+  resize: vertical;
+  line-height: 1.5;
+}
+.perf-hint {
+  font-size: .7rem;
+  color: var(--text3);
+  margin-top: 4px;
+}
+.perf-info-box {
+  background: var(--accent-glow);
+  border: 1px solid var(--accent);
+  border-radius: var(--r);
+  padding: 12px;
+  font-size: .78rem;
+  color: var(--text2);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+/* ── Fotoğraf yükleme ────────────────────────────────────── */
+.perf-upload {
+  background: var(--bg2);
+  border: 2px dashed var(--accent);
+  border-radius: var(--r);
+  padding: 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: background .15s;
+}
+.perf-upload:hover { background: var(--bg3); }
+
+/* ── Müfettiş detay / sonuç ──────────────────────────────── */
+.perf-detail-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+.perf-detail-inner {
+  max-width: 780px;
+  margin: 0 auto;
+}
+.perf-detail-info {
+  background: var(--bg1);
+  border-radius: var(--r);
+  padding: 12px;
+  margin-bottom: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+  font-size: .78rem;
+  color: var(--text2);
+}
+.perf-detail-section,
+.perf-result-block {
+  background: var(--bg1);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--r);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+.perf-detail-title,
+.perf-result-title {
+  font-size: .72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 6px;
+}
+.perf-detail-text,
+.perf-result-text {
+  font-size: .88rem;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.perf-result-score {
+  font-size: 1.7rem;
+  font-weight: 900;
+}
+.perf-result-score small {
+  font-size: .9rem;
+  color: var(--text3);
+  font-weight: 600;
+}
+.perf-provider-badge {
+  display: inline-block;
+  font-size: .68rem;
+  font-weight: 700;
+  color: var(--text3);
+  background: var(--bg2);
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+/* ── Etiketler (Maarif eğilim/değer) ─────────────────────── */
+.perf-tag-group { margin-bottom: 8px; }
+.perf-tag-title {
+  font-size: .68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.perf-tag {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-size: .7rem;
+  font-weight: 700;
+  background: var(--glass);
+  border: 1px solid;
+  margin: 2px;
+}
+
+/* ── Sınav soru editörü ──────────────────────────────────── */
+.perf-exam-q-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 16px 0 8px;
+}
+.perf-exam-q {
+  background: var(--bg1);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 10px;
+  margin-bottom: 8px;
+}
+.perf-exam-q-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: .8rem;
+  color: var(--text2);
+}
+
+/* ── Sınav bulguları ─────────────────────────────────────── */
+.perf-finding {
+  background: var(--bg1);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue);
+  border-radius: var(--r);
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.perf-finding-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: .85rem;
+}
+.perf-finding-q {
+  font-size: .8rem;
+  color: var(--text2);
+  margin-bottom: 5px;
+}
+.perf-finding-ans {
+  font-size: .8rem;
+  color: var(--text2);
+  background: var(--bg2);
+  padding: 8px;
+  border-radius: 6px;
+  font-style: italic;
+  border-left: 2px solid var(--blue);
+  margin-bottom: 6px;
+}
+.perf-finding-note {
+  font-size: .78rem;
+  color: var(--text2);
+  background: var(--blue-glow);
+  padding: 8px;
+  border-radius: 6px;
+  line-height: 1.5;
+}
+
+/* ── AI durum rozeti ─────────────────────────────────────── */
+.perf-ai-badge {
+  font-size: .7rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+.perf-ai-badge.online {
+  background: var(--green-glow);
+  color: var(--green);
+}
+.perf-ai-badge.offline {
+  background: rgba(239, 68, 68, .12);
+  color: var(--red);
+}
+
+/* ════════════════════════════════════════════════════════
+   DÖA KELEBEK BEKLEME ANİMASYONU
+   AI düşünürken — markayı yansıtan kanat çırpan kelebek.
+   ════════════════════════════════════════════════════════ */
+.perf-waiting {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 18, 20, .94);
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.perf-butterfly {
+  filter: drop-shadow(0 0 20px var(--accent-glow));
+}
+
+/* Kanat çırpma — sol ve sağ kanat ters yönde */
+.perf-bf-wing {
+  transform-origin: 60px 62px;
+  animation: perf-flap 0.7s ease-in-out infinite;
+}
+.perf-bf-wing-l { animation-name: perf-flap-l; }
+.perf-bf-wing-r { animation-name: perf-flap-r; }
+
+@keyframes perf-flap-l {
+  0%, 100% { transform: rotateY(0deg) scaleX(1); }
+  50%      { transform: rotateY(0deg) scaleX(0.35); }
+}
+@keyframes perf-flap-r {
+  0%, 100% { transform: rotateY(0deg) scaleX(1); }
+  50%      { transform: rotateY(0deg) scaleX(0.35); }
+}
+
+/* Kelebek hafifçe süzülür */
+.perf-butterfly {
+  animation: perf-float 2.4s ease-in-out infinite;
+}
+@keyframes perf-float {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50%      { transform: translateY(-14px) rotate(3deg); }
+}
+
+.perf-waiting-title {
+  color: var(--accent2);
+  font-weight: 800;
+  font-size: 1.05rem;
+  text-align: center;
+}
+.perf-waiting-sub {
+  color: var(--text2);
+  font-size: .82rem;
+  text-align: center;
+}
+
+/* Yükleniyor noktaları */
+.perf-waiting-dots {
+  display: flex;
+  gap: 6px;
+}
+.perf-waiting-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: perf-dot 1.4s ease-in-out infinite;
+}
+.perf-waiting-dots span:nth-child(2) { animation-delay: .2s; }
+.perf-waiting-dots span:nth-child(3) { animation-delay: .4s; }
+@keyframes perf-dot {
+  0%, 100% { opacity: .3; transform: scale(.8); }
+  50%      { opacity: 1; transform: scale(1.2); }
+}

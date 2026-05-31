@@ -1,0 +1,33 @@
+{
+  "cli": { "version": ">= 5.0.0" },
+  "build": {
+    "preview": {
+      "android": {
+        "buildType": "apk",
+        "image": "latest",
+        "gradleCommand": ":app:assembleRelease",
+        "env": {
+          "EXPO_NO_DEV": "1"
+        }
+      },
+      "channel": "preview"
+    },
+    "preview-arm64": {
+      "extends": "preview",
+      "android": {
+        "buildType": "apk"
+      },
+      "channel": "preview"
+    },
+    "production": {
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "channel": "production",
+      "autoIncrement": true
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

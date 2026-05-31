@@ -1,0 +1,65 @@
+[package]
+name = "dijital-ogretmen-asistani"
+version = "1.0.0"
+description = "🎓 Dijital Öğretmen Asistanı — AI destekli sınav okuma sistemi"
+authors = ["DÖA Team"]
+edition = "2021"
+rust-version = "1.77"
+
+[lib]
+name = "doa_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+# Tauri 2.x
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-shell = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-notification = "2"
+tauri-plugin-updater = "2"
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Database — SQLCipher AES-256
+rusqlite = { version = "0.31", features = ["bundled", "sqlcipher"] }
+
+# PDF Processing
+lopdf = "0.32"
+
+# Image Processing
+image = { version = "0.25", default-features = false, features = ["jpeg", "png"] }
+
+# QR Code / DataMatrix
+rxing = "0.6"
+
+# Cryptography
+aes-gcm = "0.10"
+argon2 = "0.5"
+rand = "0.8"
+sha2 = "0.10"
+hex = "0.4"
+
+# Logging (OpenTelemetry replaced)
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+tracing-appender = "0.2"
+
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# System
+directories = "5"
+chrono = "0.4"
+
+# Note: Phase 4.5 ADR-019 — native/ crate'leri kaldırıldı.
+# Tüm native kod src-tauri/src/commands/ altında.
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]

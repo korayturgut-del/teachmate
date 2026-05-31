@@ -1,0 +1,160 @@
+/* ============================================================
+   ŞEKİL EDİTÖRÜ — Samsung Notes Tarzı Maksimum Alan
+   ----------------------------------------------------------
+   sekil-editor-max.css — mevcut draw-* yapısını BOZMADAN
+   maksimum çizim alanı + yüzen araçlar + daraltılabilir panel.
+   JS (Fabric.js, fe* fonksiyonları, canvas ID'leri) DEĞİŞMEZ.
+   Mevcut modül CSS'inden SONRA yüklenir, override eder.
+   ============================================================ */
+
+/* ── Modal: tam ekran, koyu zemin ── */
+#draw-modal {
+  background: #0a0e12 !important;
+  flex-direction: column !important;
+}
+#draw-editor {
+  flex-direction: column !important;
+  position: relative;
+}
+
+/* ── Üst araç çubuğu: ince, yüzen, cam efektli ── */
+#draw-toolbar {
+  position: absolute !important;
+  top: 12px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  background: rgba(20, 26, 32, .82) !important;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255,255,255,.1) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  padding: 8px 12px !important;
+  max-width: calc(100vw - 140px);
+  transition: opacity .25s, transform .25s;
+}
+
+/* ── Sol şekil paneli: yüzen, daraltılabilir ── */
+#draw-sidebar {
+  position: absolute !important;
+  top: 0; left: 0; bottom: 0;
+  width: 230px !important;
+  z-index: 25;
+  background: rgba(15, 20, 26, .92) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(255,255,255,.08);
+  box-shadow: 4px 0 24px rgba(0,0,0,.4);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+  padding: 56px 10px 10px !important;
+}
+/* Daraltılmış durum — .collapsed sınıfı JS ile eklenir/çıkarılır */
+#draw-sidebar.collapsed {
+  transform: translateX(-230px);
+}
+
+/* Panel aç/kapa düğmesi (JS ile eklenir) */
+#draw-sidebar-toggle {
+  position: absolute;
+  top: 14px; left: 14px;
+  z-index: 35;
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: rgba(20, 26, 32, .82);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,.1);
+  color: #eaf3f4;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+}
+#draw-sidebar-toggle:hover {
+  background: var(--accent, #14b8a6);
+  transform: scale(1.05);
+}
+
+/* ── Canvas alanı: TÜM EKRAN ── */
+#draw-canvas-area {
+  flex: 1 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  padding: 0 !important;
+  background:
+    radial-gradient(1200px 700px at 50% 40%, #141c22, #0a0e12) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: auto;
+}
+
+/* Canvas konteyner: gölge + hafif kenar, ortada yüzer */
+#draw-canvas-container,
+#fe-canvas-container {
+  box-shadow: 0 20px 80px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.05) !important;
+  border-radius: 4px;
+  transition: transform .2s;
+}
+
+/* ── Kapatma düğmesi: sağ üst, belirgin ── */
+#draw-modal .draw-close,
+#draw-modal [onclick*="feClose"] {
+  position: absolute !important;
+  top: 14px; right: 14px;
+  z-index: 35;
+}
+
+/* ── Şekil paneli kategorileri: kompakt grid ── */
+#draw-sidebar .dcat-title,
+#draw-sidebar .dshape-cat-title {
+  position: sticky; top: 0;
+  background: rgba(15,20,26,.96);
+  padding: 6px 2px;
+  letter-spacing: .5px;
+}
+
+/* Şekil butonları: hover'da markalı parlama */
+#draw-sidebar .dshape,
+#draw-sidebar .draw-shape-btn,
+#draw-sidebar [onclick*="feS("] {
+  transition: all .18s cubic-bezier(.34,1.56,.64,1) !important;
+}
+#draw-sidebar .dshape:hover,
+#draw-sidebar .draw-shape-btn:hover,
+#draw-sidebar [onclick*="feS("]:hover {
+  transform: translateY(-2px) scale(1.04);
+  border-color: var(--accent, #14b8a6) !important;
+  box-shadow: 0 4px 14px rgba(20,184,166,.3);
+}
+
+/* ── Araç butonları (toolbar): yuvarlak, dokunmatik dostu ── */
+#draw-toolbar .tbtn,
+#draw-toolbar button {
+  min-width: 38px; min-height: 38px;
+  border-radius: 10px !important;
+  transition: all .18s !important;
+}
+#draw-toolbar .tbtn:hover,
+#draw-toolbar button:hover {
+  background: var(--accent, #14b8a6) !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+
+/* ── Mobil/tablet: panel tam gizlenebilir, dokunmatik öncelik ── */
+@media (max-width: 768px) {
+  #draw-sidebar { width: 200px !important; }
+  #draw-sidebar.collapsed { transform: translateX(-200px); }
+  #draw-toolbar {
+    top: auto; bottom: 16px;
+    max-width: calc(100vw - 24px);
+    overflow-x: auto;
+  }
+}
+
+/* ── Kalem modu imleci ── */
+#fe-canvas, #draw-canvas { touch-action: none; }
+
+/* ── "Tam alan" hissi: gövde taşmasını engelle ── */
+body:has(#draw-modal) { overflow: hidden; }

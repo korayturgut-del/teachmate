@@ -1,0 +1,7 @@
+{
+  "name": "@doa/workflow-engine",
+  "version": "1.0.0-doa",
+  "private": true,
+  "main": "src/index.ts",
+  "description": "Sınav yaşam döngüsü state machine. Event sırasını doğrular (EVENT_CATALOG), geçersiz geçişleri reddeder."
+}

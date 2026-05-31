@@ -1,0 +1,16 @@
+{
+  "name": "@doa/editor-engine",
+  "version": "1.0.0-doa",
+  "private": true,
+  "main": "src/index.tsx",
+  "dependencies": {
+    "fabric": "^6.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.5.4"
+  }
+}

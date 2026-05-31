@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>🖨️ PDF Editörü — Dijital Öğretmen Asistanı</title>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../shared/css/design-system.css">
+<link rel="stylesheet" href="../shared/css/layout.css">
+<link rel="stylesheet" href="../shared/css/components.css">
+<link rel="stylesheet" href="../shared/css/enhance.css">
+<link rel="stylesheet" href="css/pdf-editoru.css">
+
+<style>
+#login-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0c12;background-image:radial-gradient(at 20% 30%,rgba(20,184,166,0.15)0px,transparent 50%),radial-gradient(at 80% 70%,rgba(56,168,216,0.1)0px,transparent 50%);color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;font-family:'Inter',sans-serif}
+.login-box{background:rgba(22,27,34,0.95);padding:50px 60px;border-radius:24px;border:1px solid rgba(255,255,255,0.08);text-align:center;box-shadow:0 25px 80px -12px rgba(0,0,0,0.7);backdrop-filter:blur(20px);max-width:420px;width:90%}
+.login-box h1{font-size:56px;margin-bottom:8px}
+.login-box h2{font-size:1.3rem;font-weight:700;margin-bottom:4px;background:linear-gradient(135deg,#fff 0%,#8b949e 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.login-box .login-sub{color:#8b949e;margin-bottom:30px;font-size:.85rem}
+#main-app-content{display:none}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <h1>🖨️</h1>
+    <h2>PDF Editörü</h2>
+    <p class="login-sub">Sınav çıktıları ve baskı ayarları</p>
+    <div id="g_id_onload" data-client_id="382416473789-4ar84tn08cjbvf2o30bkqu3fl97jmsem.apps.googleusercontent.com" data-context="signin" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
+    <div class="g_id_signin" data-type="standard" data-size="large" data-theme="filled_blue" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
+        <div style="margin-top:14px;text-align:center">
+      <button onclick="directLogin()" style="background:transparent;border:1px dashed rgba(255,255,255,0.15);color:rgba(255,255,255,0.35);padding:7px 24px;border-radius:20px;cursor:pointer;font-size:.75rem;font-family:inherit;transition:all .2s" onmouseover="this.style.borderColor='rgba(255,255,255,0.4)';this.style.color='rgba(255,255,255,0.6)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(255,255,255,0.35)'">🔓 Doğrudan Giriş</button>
+    </div>
+        
+    <div id="login-error" style="display:none;color:#ef4444;margin-top:12px;font-size:.8rem"></div>
+  </div>
+</div>
+
+<div id="main-app-content">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <a href="../index.html" class="topbar-brand" style="text-decoration:none;color:var(--text)">🦋 Kelebek</a>
+        <span style="color:var(--text3);margin:0 8px">›</span>
+        <span class="topbar-page">🖨️ PDF Editörü</span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-ghost btn-sm" onclick="loadExamFromFile()">📂 Sınav Yükle</button>
+        <button class="btn btn-ghost btn-sm" onclick="saveExamToFile()">💾 Kaydet</button>
+        <button class="btn btn-ghost btn-sm" onclick="toggleFS()" id="fs-btn">⛶</button>
+        <button class="btn btn-ghost btn-sm" onclick="location.href='../index.html'">🏠 Hub</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pdf-page">
+    <!-- Settings -->
+    <div class="pdf-settings">
+      <div class="pdf-setting-group">
+        <div class="pdf-setting-title">📐 Kenar Boşluğu</div>
+        <div class="pdf-opt-row">
+          <button class="pdf-opt-btn" id="mar-dar" onclick="setMargin('dar')">Dar</button>
+          <button class="pdf-opt-btn active" id="mar-normal" onclick="setMargin('normal')">Normal</button>
+          <button class="pdf-opt-btn" id="mar-genis" onclick="setMargin('genis')">Geniş</button>
+        </div>
+      </div>
+      <div class="pdf-setting-group">
+        <div class="pdf-setting-title">🖼️ Resim Boyutu</div>
+        <div class="pdf-opt-row">
+          <button class="pdf-opt-btn" id="img-kucuk" onclick="setImgSize('kucuk')">Küçük</button>
+          <button class="pdf-opt-btn active" id="img-orta" onclick="setImgSize('orta')">Orta</button>
+          <button class="pdf-opt-btn" id="img-buyuk" onclick="setImgSize('buyuk')">Büyük</button>
+          <button class="pdf-opt-btn" id="img-tam" onclick="setImgSize('tam')">Tam</button>
+        </div>
+      </div>
+      <div class="pdf-setting-group">
+        <div class="pdf-setting-title">📄 Sütun Sayısı</div>
+        <div class="pdf-opt-row">
+          <button class="pdf-opt-btn active" id="col-1" onclick="setSutun(1)">1 Sütun</button>
+          <button class="pdf-opt-btn" id="col-2" onclick="setSutun(2)">2 Sütun</button>
+          <button class="pdf-opt-btn" id="col-3" onclick="setSutun(3)">3 Sütun</button>
+        </div>
+      </div>
+      <div class="pdf-setting-group">
+        <div class="pdf-setting-title">✂️ Sütun Ayracı</div>
+        <div class="pdf-opt-row">
+          <button class="pdf-opt-btn active" id="cr-none" onclick="setColRule('none')">Yok</button>
+          <button class="pdf-opt-btn" id="cr-line" onclick="setColRule('line')">Çizgi</button>
+          <button class="pdf-opt-btn" id="cr-dash" onclick="setColRule('dash')">Kesikli</button>
+        </div>
+        <div style="margin-top:6px"><label class="lbl">Sütun metni:</label><input class="inp inp-sm" id="col-text" onchange="setColText()" placeholder="örn: ÇAPRAZ"></div>
+      </div>
+      <div class="pdf-setting-group">
+        <div class="pdf-setting-title">🔑 Cevap Anahtarı</div>
+        <select class="inp inp-sm" id="ak-pos" onchange="updateAkPos()">
+          <option value="none">Yok</option>
+          <option value="page">Her sayfaya ekle</option>
+          <option value="end">En sona ekle</option>
+        </select>
+      </div>
+      <div class="pdf-setting-group">
+        <div class="pdf-setting-title">⚙️ Seçenekler</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <label class="cbwrap"><input type="checkbox" id="opt-seat" checked> Oturma bilgisi göster</label>
+          <label class="cbwrap"><input type="checkbox" id="opt-qs" checked> Soruları göster</label>
+          <label class="cbwrap"><input type="checkbox" id="opt-lines"> Cevap çizgileri ekle</label>
+          <label class="cbwrap"><input type="checkbox" id="opt-smart"> Akıllı sütun dengeleme</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="pdf-summary" id="print-summary"></div>
+
+    <!-- Actions -->
+    <div class="pdf-actions">
+      <button class="btn btn-primary" onclick="doPreview()">👁️ Önizleme</button>
+      <button class="btn btn-primary" onclick="doPrint()">🖨️ Hepsini Yazdır</button>
+      <button class="btn btn-ghost" onclick="printSalonListCompact()">📋 Salon Listeleri</button>
+      <button class="btn btn-ghost" onclick="printDistributionList()">📄 Dağıtım Listesi</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden print output -->
+<div id="print-output" style="display:none"></div>
+
+<script src="../shared/js/utils.js"></script>
+<script src="../shared/js/auth-globals.js"></script>
+<script src="../shared/js/student-cloud.js"></script>
+<script src="../shared/js/sync.js"></script>
+<script src="../shared/js/app-core.js"></script>
+<script src="js/pdf-editoru.js"></script>
+
+</body>
+</html>

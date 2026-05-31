@@ -1,0 +1,45 @@
+{
+  "name": "dijital-ogretmen-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dijital \u00d6\u011fretmen Asistan\u0131 \u2014 Mobil Uygulama (ADR-007: 3-dokunu\u015f ak\u0131\u015f\u0131)",
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint . --ext .ts,.tsx",
+    "typescript": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "19.0.0",
+    "react-native": "0.76.5",
+    "react-native-vision-camera": "4.6.0",
+    "react-native-worklets-core": "1.5.0",
+    "@doa/decision-engine": "workspace:*",
+    "@doa/learning-engine": "workspace:*",
+    "@doa/sync-engine": "workspace:*",
+    "react-native-vision-camera-text-recognition": "^2.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.0",
+    "@babel/preset-env": "^7.25.0",
+    "@babel/runtime": "^7.25.0",
+    "@react-native/babel-preset": "0.76.1",
+    "@react-native/eslint-config": "0.76.1",
+    "@react-native/metro-config": "0.76.1",
+    "@react-native/typescript-config": "0.76.1",
+    "@types/react": "^19.0.0",
+    "@types/react-native": "^0.73.0",
+    "typescript": "5.5.4",
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "prettier": "3.3.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "reactNative": {
+    "version": "0.76.1"
+  }
+}

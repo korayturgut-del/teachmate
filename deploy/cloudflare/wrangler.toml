@@ -1,0 +1,21 @@
+# Teachmate — Cloudflare Worker yapılandırması
+# Kurulum: deploy/cloudflare/ klasöründe `wrangler deploy`
+
+name = "teachmate-api"
+main = "worker.js"
+compatibility_date = "2024-09-01"
+
+# HF Space adresi — kendi adresinle değiştir (veya dashboard'dan ver)
+[vars]
+HF_SPACE_URL = "https://KULLANICIADI-teachmate-brain.hf.space"
+
+# Route: yalnızca /api/* isteklerini bu Worker yakalar.
+# Diğer tüm yollar Cloudflare Pages statik siteye gider.
+# Domain bağlandıktan sonra dashboard'dan da eklenebilir.
+[[routes]]
+pattern = "teachmate.com.tr/api/*"
+zone_name = "teachmate.com.tr"
+
+[[routes]]
+pattern = "www.teachmate.com.tr/api/*"
+zone_name = "teachmate.com.tr"

@@ -1,0 +1,7 @@
+{
+  "name": "@doa/learning-engine",
+  "version": "1.0.0-doa",
+  "private": true,
+  "main": "src/index.ts",
+  "description": "Öğrenme Motoru — öğretmen düzeltmelerinden öğrenir, bulutta saklar, OCR doğruluğunu zamanla geliştirir. Ürünün rekabet hendeği."
+}

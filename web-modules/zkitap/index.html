@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>📖 Z-Kitap — Dijital Öğretmen Asistanı</title>
+
+<!-- CDN -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../shared/css/design-system.css">
+<link rel="stylesheet" href="../shared/css/layout.css">
+<link rel="stylesheet" href="../shared/css/components.css">
+<link rel="stylesheet" href="../shared/css/enhance.css">
+<link rel="stylesheet" href="css/zkitap.css">
+
+<style>
+#login-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0c12;background-image:radial-gradient(at 20% 30%,rgba(20,184,166,0.15)0px,transparent 50%),radial-gradient(at 80% 70%,rgba(56,168,216,0.1)0px,transparent 50%);color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;font-family:'Inter',sans-serif}
+.login-box{background:rgba(22,27,34,0.95);padding:50px 60px;border-radius:24px;border:1px solid rgba(255,255,255,0.08);text-align:center;box-shadow:0 25px 80px -12px rgba(0,0,0,0.7);backdrop-filter:blur(20px);max-width:420px;width:90%}
+.login-box h1{font-size:56px;margin-bottom:8px}
+.login-box h2{font-size:1.3rem;font-weight:700;margin-bottom:4px;background:linear-gradient(135deg,#fff 0%,#8b949e 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.login-box .login-sub{color:#8b949e;margin-bottom:30px;font-size:.85rem}
+#main-app-content{display:none}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <h1>📖</h1>
+    <h2>Z-Kitap</h2>
+    <p class="login-sub">PDF soru kesme, çizim ve çalışma kağıdı hazırlama</p>
+    <div id="g_id_onload" data-client_id="382416473789-4ar84tn08cjbvf2o30bkqu3fl97jmsem.apps.googleusercontent.com" data-context="signin" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
+    <div class="g_id_signin" data-type="standard" data-size="large" data-theme="filled_blue" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
+    <div style="margin-top:14px;text-align:center">
+      <button onclick="directLogin()" style="background:transparent;border:1px dashed rgba(255,255,255,0.15);color:rgba(255,255,255,0.35);padding:7px 24px;border-radius:20px;cursor:pointer;font-size:.75rem;font-family:inherit;transition:all .2s" onmouseover="this.style.borderColor='rgba(255,255,255,0.4)';this.style.color='rgba(255,255,255,0.6)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(255,255,255,0.35)'">🔓 Doğrudan Giriş</button>
+    </div>
+    <div id="login-error" style="display:none;color:#ef4444;margin-top:12px;font-size:.8rem"></div>
+  </div>
+</div>
+
+<div id="main-app-content">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <a href="../index.html" class="topbar-brand" style="text-decoration:none;color:var(--text)">🦋 Kelebek</a>
+        <span style="color:var(--text3);margin:0 8px">›</span>
+        <span class="topbar-page">📖 Z-Kitap</span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-ghost btn-sm" onclick="location.href='../index.html'">🏠 Hub</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="card" style="margin:16px;margin-bottom:8px;padding:10px 14px">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span style="font-size:1.3rem">📖</span>
+      <div id="zkitap-title" style="font-weight:700;font-size:.92rem">Z-Kitap</div>
+      <span id="zkitap-meta" style="color:var(--text3);font-size:.72rem">PDF veya KLB yükleyerek başlayın</span>
+      <div style="flex:1"></div>
+      <div id="zk-main-actions" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-primary btn-sm" onclick="zkLoadFile()">📂 KLB Yükle</button>
+        <button class="btn btn-success btn-sm" onclick="zkLoadPDF()" id="zk-pdf-load-btn">📄 PDF Yükle</button>
+        <button class="btn btn-ghost btn-sm" onclick="zkReopenPDFs()" id="zk-pdf-reopen-btn" style="display:none;border-color:var(--green);color:var(--green)">📄 PDF'leri Tekrar Aç</button>
+        <button class="btn btn-ghost btn-sm" onclick="zkPrintFromMain()">🖨️ Yazdır</button>
+        <button class="btn btn-ghost btn-sm" onclick="zkClearAll()" style="color:var(--red)">🗑️</button>
+      </div>
+      <div style="width:1px;height:24px;background:var(--border);margin:0 4px"></div>
+      <button class="btn btn-ghost btn-sm" onclick="zkShowWorksheet()" id="zk-worksheet-btn">📝 Çalışma Kağıdı</button>
+    </div>
+  </div>
+
+  <!-- Ana Görünüm -->
+  <div id="zk-view-area" style="margin:0 16px">
+    <div id="zk-cards-wrap" class="zcards-grid"></div>
+    <div id="zk-empty" class="alert alert-info" style="margin-top:8px">
+      📖 Başlamak için <b>KLB Yükle</b> veya <b>PDF Yükle</b> butonunu kullanın.<br>
+      💡 Soruları kesip düzenledikten sonra <b>Çalışma Kağıdı</b> ile çıktı alabilirsiniz.
+    </div>
+  </div>
+
+  <!-- Çalışma Kağıdı Paneli -->
+  <div id="zk-worksheet-panel" style="display:none;margin:0 16px">
+    <div class="card" style="margin-bottom:12px;padding:10px 14px;background:rgba(20,184,166,0.05)">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" onclick="zkBackToMain()" style="border-color:var(--accent);color:var(--accent)">← Z-Kitap</button>
+        <div style="flex:1"></div>
+        <button class="btn btn-ghost btn-sm" onclick="zkdPreview()">👁️ Önizle</button>
+        <button class="btn btn-primary btn-sm" onclick="zkdPrint()">🖨️ Yazdır / PDF</button>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:12px;padding:10px 14px">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span style="font-size:.78rem;font-weight:700;color:var(--text2)">Soru Ekle:</span>
+        <button class="btn btn-primary btn-sm" onclick="zkdAddQ('mc')">🔵 Çoktan Seçmeli</button>
+        <button class="btn btn-ghost btn-sm" onclick="zkdAddQ('open')">📝 Açık Uçlu</button>
+        <button class="btn btn-ghost btn-sm" onclick="zkdAddSection()">📌 Bölüm Başlığı</button>
+        <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
+        <button class="btn btn-success btn-sm" onclick="zkdLoadFromZKitap()">📖 Z-Kitap'tan Al</button>
+        <button class="btn btn-ghost btn-sm" onclick="zkdClearAll()" style="color:var(--red)">🗑️ Temizle</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:260px 1fr;gap:14px">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px;font-size:.85rem">📐 Sayfa Ayarları</div>
+        <div class="lbl" style="margin-bottom:6px;font-size:.75rem">📄 Sütun Düzeni</div>
+        <div class="col-picker">
+          <div class="col-btn" id="zkd-col-1" onclick="zkdSetCol(1)">1 Sütun</div>
+          <div class="col-btn active" id="zkd-col-2" onclick="zkdSetCol(2)">2 Sütun</div>
+        </div>
+        <div style="height:12px"></div>
+        <div><label class="lbl" style="font-size:.75rem">Filigran</label><input class="inp inp-sm" id="zkd-filigran" placeholder="GİZLİ"></div>
+      </div>
+      <div>
+        <div id="zkd-qlist" class="qlist-wrap"></div>
+        <div id="zkd-empty" class="alert alert-info" style="margin-top:8px">
+          ℹ️ Henüz soru eklenmedi. <b>Z-Kitap'tan Al</b> ile mevcut soruları aktarabilir veya yeni soru ekleyebilirsiniz.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== FULLSCREEN OVERLAY ====== -->
+<div id="zk-fullscreen" style="display:none;position:fixed;inset:0;z-index:8000;background:#fff;flex-direction:column">
+  <div id="zk-topbar" style="height:48px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0;z-index:10">
+    <button class="icon-btn" onclick="zkClose()" data-tip="Kapat">✕</button>
+    <span id="zk-q-indicator" style="font-weight:700;font-size:.85rem;color:var(--text)">1 / 10</span>
+    <div style="flex:1"></div>
+    <button class="icon-btn" onclick="zkPrev()" data-tip="Önceki">◀</button>
+    <button class="icon-btn" onclick="zkNext()" data-tip="Sonraki">▶</button>
+    <div style="width:1px;height:24px;background:var(--border);margin:0 4px"></div>
+    <button class="icon-btn" id="zk-pen-toggle" onclick="zkTogglePanel()" data-tip="Yazım Araçları">✏️</button>
+    <button class="icon-btn" onclick="zkToggleZoom()" id="zk-zoom-btn" data-tip="Yakınlaştır">🔍</button>
+  </div>
+  <div style="flex:1;display:flex;overflow:hidden;position:relative" id="zk-main-area">
+    <div id="zk-swipe-area" style="flex:1;overflow:auto;position:relative;background:#e8e8e8">
+      <div id="zk-content-wrap" style="position:relative;margin:0 auto;max-width:960px">
+        <div id="zk-question-display" style="padding:24px;font-family:'Times New Roman',serif;font-size:1.1rem;line-height:1.7;color:#111;background:#fff;min-height:100vh;position:relative;box-shadow:0 0 20px rgba(0,0,0,.15)"></div>
+        <div id="zk-canvas-wrap" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:5;pointer-events:none">
+          <canvas id="zk-draw-canvas"></canvas>
+        </div>
+      </div>
+    </div>
+    <div id="zk-panel" style="display:none;position:absolute;right:8px;top:8px;z-index:20;background:var(--bg1);border:1px solid var(--border);border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.5);padding:6px;opacity:1">
+      <div style="display:flex;flex-direction:column;gap:4px;align-items:center;width:36px">
+        <button class="zk-tool-btn active" id="zkt-pen" onclick="zkSetTool('pen')" style="width:32px;height:32px;padding:0;font-size:.8rem" title="Kalem">✏️</button>
+        <button class="zk-tool-btn" id="zkt-eraser" onclick="zkSetTool('eraser')" style="width:32px;height:32px;padding:0;font-size:.8rem" title="Silgi">🧹</button>
+        <button class="zk-tool-btn" id="zkt-highlight" onclick="zkSetTool('highlight')" style="width:32px;height:32px;padding:0;font-size:.8rem" title="İşaret">🖍️</button>
+        <div style="height:1px;width:24px;background:var(--border);margin:2px 0"></div>
+        <div id="zk-colors" style="display:flex;flex-direction:column;gap:3px">
+          <div class="zk-color-dot active" style="background:#222;width:20px;height:20px" onclick="zkSetColor('#222',this)"></div>
+          <div class="zk-color-dot" style="background:#ef4444;width:20px;height:20px" onclick="zkSetColor('#ef4444',this)"></div>
+          <div class="zk-color-dot" style="background:#3b82f6;width:20px;height:20px" onclick="zkSetColor('#3b82f6',this)"></div>
+          <div class="zk-color-dot" style="background:#10b981;width:20px;height:20px" onclick="zkSetColor('#10b981',this)"></div>
+        </div>
+        <div style="height:1px;width:24px;background:var(--border);margin:2px 0"></div>
+        <input type="range" id="zk-brush-size" min="1" max="20" value="3" style="width:24px;height:50px;accent-color:var(--accent);writing-mode:vertical-lr;direction:rtl" oninput="zkSetBrushSize(this.value)">
+        <span id="zk-size-val" style="font-size:.55rem;color:var(--text3)">3</span>
+        <div style="height:1px;width:24px;background:var(--border);margin:2px 0"></div>
+        <button class="zk-tool-btn" onclick="zkUndo()" style="width:32px;height:32px;padding:0;font-size:.75rem" title="Geri al">↩️</button>
+        <button class="zk-tool-btn" onclick="zkClearDraw()" style="width:32px;height:32px;padding:0;font-size:.75rem;color:var(--red)" title="Sil">🗑️</button>
+      </div>
+    </div>
+    <div id="zk-mini-nav" style="display:none;position:absolute;left:8px;bottom:8px;z-index:20;background:var(--bg1);border:1px solid var(--border);border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.4);padding:6px;max-width:200px;display:flex;flex-wrap:wrap;gap:3px"></div>
+  </div>
+</div>
+
+<!-- ====== PDF CROP OVERLAY ====== -->
+<div id="zk-pdf-crop" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.95);flex-direction:column">
+  <div style="height:40px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0">
+    <button class="icon-btn" onclick="zkPdfCropClose()" style="width:30px;height:30px;font-size:.85rem">✕</button>
+    <span style="font-weight:700;font-size:.8rem;color:var(--text)">✂️ Kesici</span>
+    <button class="btn btn-ghost btn-xs" onclick="zkPdfAddMore()">➕ PDF Ekle</button>
+    <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
+    <button class="icon-btn" onclick="zkPdfPrevPage()" style="width:26px;height:26px;font-size:.7rem">◀</button>
+    <span id="zk-pdf-page-info" style="font-weight:700;font-size:.72rem;color:var(--text);min-width:60px;text-align:center">1/1</span>
+    <button class="icon-btn" onclick="zkPdfNextPage()" style="width:26px;height:26px;font-size:.7rem">▶</button>
+    <div style="flex:1"></div>
+    <span id="zk-crop-count" style="font-size:.72rem;color:var(--green);font-weight:700">0 kesildi</span>
+    <button class="btn btn-ghost btn-xs" onclick="zkPdfUndoCrop()">↩️</button>
+    <button class="btn btn-ghost btn-xs" onclick="zkPdfPreview()">👁️</button>
+    <button class="btn btn-success btn-xs" onclick="zkPdfCropDone()">✅ Oluştur</button>
+  </div>
+  <div id="zk-pdf-tabs" style="display:flex;gap:2px;padding:3px 8px;background:var(--bg3);overflow-x:auto;flex-shrink:0;min-height:28px"></div>
+  <div id="zk-pdf-canvas-wrap" style="flex:1;overflow:auto;display:flex;gap:8px;padding:8px;position:relative;cursor:crosshair;align-items:flex-start">
+    <canvas id="zk-pdf-canvas" style="box-shadow:0 2px 16px rgba(0,0,0,.5);flex-shrink:0"></canvas>
+    <div id="zk-crop-rect" style="display:none;position:absolute;border:2px dashed #ef4444;background:rgba(239,68,68,.15);z-index:10;pointer-events:none;border-radius:2px"></div>
+  </div>
+  <div id="zk-crop-previews" style="max-height:80px;overflow-x:auto;overflow-y:hidden;display:flex;gap:4px;padding:4px 8px;background:var(--bg2);border-top:1px solid var(--border);flex-shrink:0"></div>
+</div>
+
+<!-- ====== PDF PREVIEW OVERLAY ====== -->
+<div id="zk-pdf-preview" style="display:none;position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.9);flex-direction:column">
+  <div style="height:48px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0">
+    <button class="icon-btn" onclick="zkPdfPreviewClose()">✕</button>
+    <span style="font-weight:700;font-size:.85rem;color:var(--text)">👁️ Çalışma Kağıdı Önizleme</span>
+    <div style="flex:1"></div>
+    <button class="btn btn-primary btn-sm" onclick="zkPdfPrint()">🖨️ Yazdır / PDF</button>
+  </div>
+  <div id="zk-pdf-preview-content" style="flex:1;overflow:auto;padding:20px;display:flex;justify-content:center"></div>
+</div>
+
+<!-- Hidden print output -->
+<div id="print-output" style="display:none"></div>
+
+<script src="../shared/js/utils.js"></script>
+<script src="../shared/js/auth-globals.js"></script>
+<script src="../shared/js/student-cloud.js"></script>
+<script src="../shared/js/sync.js"></script>
+<script src="../shared/js/app-core.js"></script>
+<script src="js/zkitap.js"></script>
+
+</body>
+</html>

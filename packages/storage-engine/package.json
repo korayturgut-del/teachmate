@@ -1,0 +1,7 @@
+{
+  "name": "@doa/storage-engine",
+  "version": "1.0.0-doa",
+  "private": true,
+  "main": "src/index.ts",
+  "description": "SQLCipher AES-256 Veritabanı Sarmalayıcı"
+}

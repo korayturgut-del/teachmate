@@ -1,0 +1,7 @@
+{
+  "name": "@doa/question-segmentation",
+  "version": "1.0.0-doa",
+  "private": true,
+  "main": "src/index.ts",
+  "description": "Soru segmentasyonu — sayfayı soru kutularına ayırır. Tüm sayfa değil, sadece ilgili kutu OCR edilir (daha doğru + ekonomik)."
+}

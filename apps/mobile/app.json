@@ -1,0 +1,14 @@
+{
+  "name": "DijitalOgretmenMobile",
+  "displayName": "Dijital Öğretmen Asistanı",
+  "version": "1.0.0",
+  "description": "Yapay zeka destekli yazılı okuma ve değerlendirme — mobil uygulama",
+  "author": "DÖA Ekibi",
+  "license": "UNLICENSED",
+  "reactNative": {
+    "bundleIdentifier": "com.dijitalogretmen.mobile",
+    "androidPackageName": "com.dijitalogretmen.mobile",
+    "iosDeploymentTarget": "15.1",
+    "minSdkVersion": 26
+  }
+}

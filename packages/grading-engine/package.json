@@ -1,0 +1,10 @@
+{
+  "name": "@doa/grading-engine",
+  "version": "1.0.0-doa",
+  "private": true,
+  "main": "src/index.ts",
+  "description": "AI Puanlama Geçiş Katmanı — Mock ↔ DeepSeek",
+  "dependencies": {
+    "@doa/answer-key-engine": "workspace:*"
+  }
+}

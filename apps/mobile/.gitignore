@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# React Native
+.metro-health-check*
+ios/Pods/
+ios/build/
+android/app/build/
+android/.gradle/
+android/build/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Bundler
+*.jsbundle
+
+# TypeScript
+*.tsbuildinfo
+
+# Misc
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+Thumbs.db

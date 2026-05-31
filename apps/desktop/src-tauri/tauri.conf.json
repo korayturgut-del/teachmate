@@ -1,0 +1,105 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Dijital Öğretmen Asistanı",
+  "version": "1.15.0",
+  "identifier": "ai.doa.desktop",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "title": "Dijital Öğretmen Asistanı — DÖA",
+    "windows": [
+      {
+        "title": "🎓 Dijital Öğretmen Asistanı",
+        "width": 1280,
+        "height": 800,
+        "minWidth": 900,
+        "minHeight": 600,
+        "resizable": true,
+        "fullscreen": false,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; script-src 'self'"
+    },
+    "trayIcon": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true,
+      "tooltip": "Dijital Öğretmen Asistanı"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "category": "Education",
+    "shortDescription": "AI destekli sınav okuma sistemi",
+    "longDescription": "Dijital Öğretmen Asistanı (DÖA), öğretmenlerin sınav kağıtlarını yapay zeka ile otomatik okuyup değerlendiren masaüstü uygulamasıdır. Fabric.js sınav editörü, Konva.js dijital masa, ADF toplu tarama ve mobil senkronizasyon özellikleriyle tam bir öğretmen asistanıdır.",
+    "windows": {
+      "wix": {
+        "language": "tr-TR"
+      },
+      "nsis": {
+        "languages": [
+          "Turkish",
+          "English"
+        ],
+        "installMode": "currentUser"
+      }
+    },
+    "macOS": {
+      "minimumSystemVersion": "11.0"
+    },
+    "linux": {
+      "deb": {
+        "depends": [
+          "libwebkit2gtk-4.1-0",
+          "libgtk-3-0"
+        ]
+      }
+    }
+  },
+  "plugins": {
+    "shell": {
+      "open": true
+    },
+    "dialog": {
+      "all": true
+    },
+    "fs": {
+      "scope": {
+        "allow": [
+          "$APPDATA/**",
+          "$DOCUMENT/**",
+          "$DESKTOP/**",
+          "$HOME/**"
+        ],
+        "deny": []
+      }
+    },
+    "notification": {
+      "all": true
+    },
+    "updater": {
+      "active": true,
+      "dialog": true,
+      "endpoints": [
+        "https://doa-releases.fly.dev/{{target}}/{{arch}}/{{current_version}}"
+      ],
+      "pubkey": "UPDATER_PUBLIC_KEY_PLACEHOLDER",
+      "windows": {
+        "installMode": "passive"
+      }
+    }
+  }
+}

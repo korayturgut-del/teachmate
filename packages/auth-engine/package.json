@@ -1,0 +1,7 @@
+{
+  "name": "@doa/auth-engine",
+  "version": "1.0.0-doa",
+  "private": true,
+  "main": "src/index.ts",
+  "description": "Öğretmen kimlik & oturum yönetimi — yerel, çevrimdışı çalışır. PIN/parola Argon2 (Rust crypto.rs) ile doğrulanır."
+}

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maarif OS — Performans Değerlendirme Beyni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spline+Sans:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1410; --ink-soft:#3d342b; --paper:#f4ede0; --paper-2:#ebe1cf;
+  --line:#cbb89a; --line-soft:#ddceb3; --gold:#9a6b1e; --gold-bright:#c08a2d;
+  --crimson:#8a2b1e; --crimson-soft:#b14436; --green:#3f6b3a; --green-soft:#5a8a52;
+  --shadow:0 1px 2px rgba(26,20,16,.08),0 8px 24px rgba(26,20,16,.10);
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Spline Sans',sans-serif; color:var(--ink); line-height:1.55;
+  background:
+    radial-gradient(1200px 600px at 80% -10%,rgba(192,138,45,.10),transparent 60%),
+    radial-gradient(900px 500px at -10% 110%,rgba(138,43,30,.08),transparent 55%),
+    var(--paper);
+  background-attachment:fixed; min-height:100vh;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.05 0 0 0 .035 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 20px 80px}
+
+/* Header */
+header{padding:38px 0 26px;border-bottom:2px solid var(--ink);margin-bottom:2px;position:relative}
+header::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:1px;background:var(--ink);opacity:.4}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.seal{font-family:'Fraunces',serif;font-weight:600;font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);border:1.5px solid var(--gold);padding:5px 11px;border-radius:3px}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(26px,4vw,40px);letter-spacing:-.01em;line-height:1.05}
+.sub{font-family:'Spline Sans Mono',monospace;font-size:12.5px;color:var(--ink-soft);margin-top:8px;letter-spacing:.02em}
+.prov{display:inline-flex;align-items:center;gap:7px;margin-top:14px;font-family:'Spline Sans Mono',monospace;font-size:12px;background:var(--paper-2);border:1px solid var(--line);padding:5px 12px;border-radius:20px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green-soft);box-shadow:0 0 0 3px rgba(90,138,82,.2)}
+
+/* Tabs */
+nav{display:flex;gap:4px;margin:26px 0 22px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.tab{font-family:'Fraunces',serif;font-weight:500;font-size:15px;padding:10px 16px;cursor:pointer;color:var(--ink-soft);border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0;transition:.18s;position:relative;top:1px;background:transparent}
+.tab:hover{color:var(--ink);background:rgba(203,184,154,.18)}
+.tab.active{color:var(--ink);background:var(--paper);border-color:var(--line);font-weight:600}
+.tab.active::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--paper)}
+
+/* Cards */
+.panel{display:none;animation:fade .35s ease}
+.panel.show{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);margin-bottom:18px}
+.card h2{font-family:'Fraunces',serif;font-weight:600;font-size:21px;margin-bottom:4px}
+.card .desc{font-size:13.5px;color:var(--ink-soft);margin-bottom:18px}
+label{display:block;font-size:12.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-soft);margin:14px 0 6px}
+input,select,textarea{width:100%;font-family:'Spline Sans',sans-serif;font-size:15px;color:var(--ink);background:var(--paper-2);border:1px solid var(--line);border-radius:9px;padding:11px 13px;transition:.15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(154,107,30,.13);background:#fbf6ec}
+textarea{resize:vertical;min-height:72px;line-height:1.5}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.row{grid-template-columns:1fr}nav{overflow-x:auto}}
+button.go{font-family:'Fraunces',serif;font-weight:600;font-size:15px;color:var(--paper);background:var(--ink);border:none;border-radius:9px;padding:12px 22px;cursor:pointer;margin-top:18px;transition:.18s;letter-spacing:.01em}
+button.go:hover{background:var(--crimson)}
+button.go:active{transform:translateY(1px)}
+button.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+button.ghost:hover{background:var(--ink);color:var(--paper)}
+
+/* Result blocks */
+.result{margin-top:20px}
+.scorebar{display:flex;align-items:center;gap:18px;background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:16px 20px}
+.scoreval{font-family:'Fraunces',serif;font-weight:700;font-size:46px;line-height:1;color:var(--ink)}
+.band{font-size:13px;color:var(--ink-soft);font-style:italic}
+.chip{display:inline-block;font-family:'Spline Sans Mono',monospace;font-size:12px;padding:4px 11px;border-radius:7px;margin:3px 4px 3px 0;border:1px solid}
+.chip.val{background:rgba(63,107,58,.10);border-color:var(--green-soft);color:var(--green)}
+.chip.neg{background:rgba(138,43,30,.09);border-color:var(--crimson-soft);color:var(--crimson)}
+.chip.neu{background:var(--paper-2);border-color:var(--line);color:var(--ink-soft)}
+.field{margin-top:14px}
+.field .k{font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--gold);margin-bottom:3px}
+.field .v{font-size:14.5px;color:var(--ink-soft);line-height:1.6}
+.probe{background:linear-gradient(180deg,rgba(192,138,45,.12),rgba(192,138,45,.05));border:1px solid var(--gold);border-left:4px solid var(--gold);border-radius:0 12px 12px 0;padding:15px 18px;margin-top:16px}
+.probe .q{font-family:'Fraunces',serif;font-weight:600;font-size:16px;color:var(--ink)}
+.probe .why{font-size:12.5px;color:var(--ink-soft);margin-top:6px;font-style:italic}
+.event{border:1px solid var(--line);border-radius:11px;padding:14px 16px;margin-bottom:10px;background:var(--paper)}
+.event .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.event .raw{font-weight:500;font-size:15px}
+.event .meta{font-family:'Spline Sans Mono',monospace;font-size:11px;color:var(--ink-soft)}
+.voice{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+@media(max-width:620px){.voice{grid-template-columns:1fr}}
+.voice .box{background:var(--paper-2);border:1px solid var(--line-soft);border-radius:8px;padding:9px 11px}
+.voice .box .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin-bottom:3px}
+.voice .box .txt{font-size:13.5px}
+.override{background:linear-gradient(180deg,rgba(138,43,30,.13),rgba(138,43,30,.06));border:2px solid var(--crimson);border-radius:12px;padding:18px 20px;margin-top:16px}
+.override .hd{font-family:'Spline Sans Mono',monospace;font-size:11.5px;font-weight:600;letter-spacing:.06em;color:var(--crimson);margin-bottom:8px}
+.override .big{font-family:'Fraunces',serif;font-weight:600;font-size:18px;line-height:1.4;color:var(--crimson)}
+.seen{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.seen span{font-family:'Spline Sans Mono',monospace;font-size:11px;background:var(--paper);border:1px solid var(--line);padding:4px 9px;border-radius:6px;color:var(--ink-soft)}
+.loading{font-family:'Spline Sans Mono',monospace;font-size:13px;color:var(--gold);padding:14px 0}
+.empty{font-size:13.5px;color:var(--ink-soft);font-style:italic;padding:8px 0}
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:6px}
+.stat{background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:13px 15px}
+.stat .n{font-family:'Fraunces',serif;font-weight:700;font-size:26px}
+.stat .l{font-size:11.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em}
+.range-row{display:flex;align-items:center;gap:14px;margin-top:14px}
+input[type=range]{flex:1;accent-color:var(--crimson)}
+.foot{margin-top:40px;text-align:center;font-family:'Spline Sans Mono',monospace;font-size:11px;color:var(--ink-soft);letter-spacing:.04em}
+.divider{height:1px;background:var(--line);margin:18px 0}
+.hint{font-size:12px;color:var(--ink-soft);margin-top:5px;font-style:italic}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand">
+    <span class="seal">Maarif OS</span>
+    <h1>Performans Değerlendirme Beyni</h1>
+  </div>
+  <div class="sub">Erdem · Değer · Eylem — Kanıt birikir, örüntü konuşur, hesap verilir.</div>
+  <div class="prov"><span class="dot"></span> Sağlayıcı: <strong id="provName">—</strong></div>
+</header>
+
+<nav>
+  <button class="tab active" data-p="eval">Tek Olay Değerlendirme</button>
+  <button class="tab" data-p="ledger">Kanıt Defteri</button>
+  <button class="tab" data-p="year">Sene Sonu &amp; Hesap Verebilirlik</button>
+  <button class="tab" data-p="factory">Veri Fabrikası</button>
+  <button class="tab" data-p="onto">Ontoloji</button>
+</nav>
+
+<!-- TEK OLAY -->
+<section class="panel show" id="p-eval">
+  <div class="card">
+    <h2>Tek Olay Değerlendirme</h2>
+    <p class="desc">Bir gözlemi anında değerlendirir. Skoru deterministik kural motoru mühürler; LLM yalnızca pürüzsüz dille raporlar.</p>
+    <div class="row">
+      <div><label>Öğrenci</label><input id="ev-name" value="Öğrenci"></div>
+      <div><label>Değerlendirme Türü</label><select id="ev-type"></select></div>
+    </div>
+    <label>Gözlem Metni</label>
+    <textarea id="ev-obs" placeholder="Örn: Ali arkadaşına yardım etti, destek oldu ve kaynağını kaynakçada belirtti."></textarea>
+    <button class="go" onclick="doEval()">Değerlendir</button>
+    <div class="result" id="ev-out"></div>
+  </div>
+</section>
+
+<!-- KANIT DEFTERİ -->
+<section class="panel" id="p-ledger">
+  <div class="card">
+    <h2>Olay Kaydı</h2>
+    <p class="desc">Tek olay puanlamaz — kayıt biriktirir. Niyet belirsizse beyin <em>"neden?"</em> diye sorar; cevabı öğretmen girer.</p>
+    <div class="row">
+      <div><label>Öğrenci No / ID</label><input id="lg-id" value="ogr_001"></div>
+      <div><label>Öğrenci Adı</label><input id="lg-name" value="Ali"></div>
+    </div>
+    <label>Gözlem</label>
+    <textarea id="lg-raw" placeholder="Örn: Ali sıranın yerini değiştirdi."></textarea>
+    <button class="go" onclick="addEvent()">Olayı Kaydet</button>
+    <div id="lg-probe"></div>
+  </div>
+  <div class="card">
+    <h2>Defter — Olay Geçmişi &amp; Örüntü</h2>
+    <p class="desc">Bir öğrencinin sene boyu biriken kanıtı. Örüntü tutarlılığı puanı belirler.</p>
+    <div class="row">
+      <div><label>Öğrenci ID</label><input id="lg-load" value="ogr_001"></div>
+      <div style="display:flex;align-items:flex-end"><button class="go ghost" style="margin-top:0;width:100%" onclick="loadLedger()">Defteri Aç</button></div>
+    </div>
+    <div id="lg-pattern"></div>
+    <div class="divider"></div>
+    <div id="lg-events"></div>
+  </div>
+</section>
+
+<!-- SENE SONU -->
+<section class="panel" id="p-year">
+  <div class="card">
+    <h2>Sene Sonu Değerlendirme</h2>
+    <p class="desc">Beyin biriken kanıttan tahmin üretir. Öğretmen onaylayabilir ya da ezebilir — ama ezme <strong>silinemez bir damgayla</strong> herkesin göreceği şekilde raporlanır ve değiştirilemez.</p>
+    <div class="row">
+      <div><label>Öğrenci ID</label><input id="yr-id" value="ogr_001"></div>
+      <div style="display:flex;align-items:flex-end"><button class="go ghost" style="margin-top:0;width:100%" onclick="loadYear()">Tahmini Getir</button></div>
+    </div>
+    <div id="yr-out"></div>
+  </div>
+</section>
+
+<!-- VERİ FABRİKASI -->
+<section class="panel" id="p-factory">
+  <div class="card">
+    <h2>Sentetik Veri Fabrikası</h2>
+    <p class="desc">Tohum davranışları kademe × mekân × durum × dil varyasyonuyla binlerce deterministik kayda çoğaltır. LLM kullanmaz; tekrar üretilebilir.</p>
+    <div class="row">
+      <div><label>Üretilecek Kayıt</label><input id="fc-count" type="number" value="500" min="50" max="5000"></div>
+      <div><label>Tohum (deterministik)</label><input id="fc-seed" type="number" value="42"></div>
+    </div>
+    <button class="go" onclick="runFactory()">Önizleme Üret</button>
+    <div id="fc-out"></div>
+  </div>
+</section>
+
+<!-- ONTOLOJİ -->
+<section class="panel" id="p-onto">
+  <div class="card">
+    <h2>Maarif Ontoloji Ağacı</h2>
+    <p class="desc">Çatı değerlerin üç selim (Akl-ı, Kalb-i, Zevk-i Selim) ile ilişkisi ve alt kategorileri.</p>
+    <div id="onto-out"><div class="loading">Yükleniyor…</div></div>
+  </div>
+</section>
+
+<div class="foot">Maarif OS · Performans AI v2.0 — Tek öğretmenli · Kanıt mühürlü · Hesap verebilir</div>
+</div>
+
+<script>
+const API = location.origin.startsWith('http') ? '' : '';
+const $ = s => document.querySelector(s);
+async function api(path, opts){ const r = await fetch(path, opts); if(!r.ok && r.status!==409) throw new Error(await r.text()); return {status:r.status, data: await r.json().catch(()=>({}))}; }
+function esc(s){ return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+// Tabs
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('show'));
+  t.classList.add('active'); $('#p-'+t.dataset.p).classList.add('show');
+});
+
+// Init: provider + meta
+(async()=>{
+  try{
+    const {data:meta} = await api('/api/meta');
+    $('#provName').textContent = meta.provider || '—';
+    const sel = $('#ev-type'); sel.innerHTML='';
+    Object.entries(meta.grade_types).forEach(([k,v])=>{
+      const o=document.createElement('option'); o.value=k; o.textContent=v.label; sel.appendChild(o);
+    });
+    renderOnto(meta.ontology);
+  }catch(e){ $('#provName').textContent='offline'; }
+})();
+
+// Tek olay
+async function doEval(){
+  const out=$('#ev-out'); out.innerHTML='<div class="loading">Kanıt motoru çalışıyor…</div>';
+  try{
+    const {data:r} = await api('/api/evaluate',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({grade_type:$('#ev-type').value,observation:$('#ev-obs').value,student_name:$('#ev-name').value})});
+    const m=r.maarif||{}; const vals=(m.cati_degerler||[]).map(v=>`<span class="chip val">${esc(v)}</span>`).join('');
+    const becs=(m.beceriler||[]).map(v=>`<span class="chip neu">${esc(v)}</span>`).join('');
+    let eg=''; Object.entries(m.egilimler||{}).forEach(([k,arr])=>arr.forEach(x=>eg+=`<span class="chip neu">${esc(x)}</span>`));
+    out.innerHTML=`
+      <div class="scorebar"><div class="scoreval">${r.score_100}</div>
+        <div><div class="band">${esc(r.band||'')}</div>
+        <div style="margin-top:6px;font-family:'Spline Sans Mono',monospace;font-size:11px;color:var(--ink-soft)">sağlayıcı: ${esc(r.provider||'')}</div></div></div>
+      <div class="field"><div class="k">Çatı Değerler</div><div>${vals||'<span class="empty">gösterge oluşmadı</span>'}</div></div>
+      <div class="field"><div class="k">Eğilimler</div><div>${eg||'<span class="empty">—</span>'}</div></div>
+      <div class="field"><div class="k">Beceriler</div><div>${becs||'<span class="empty">—</span>'}</div></div>
+      <div class="field"><div class="k">Muallim Yorumu</div><div class="v">${esc(r.maarif_muallimi_yorumu||'')}</div></div>
+      <div class="field"><div class="k">Güçlü Yönler</div><div class="v">${esc(r.guclu_yonler||'')}</div></div>
+      <div class="field"><div class="k">Gelişim Alanları</div><div class="v">${esc(r.gelisim_alanlari||'')}</div></div>
+      <div class="field"><div class="k">Öğrenciye Geri Bildirim</div><div class="v">${esc(r.feedback_for_student||'')}</div></div>`;
+  }catch(e){ out.innerHTML='<div class="empty">Hata: '+esc(e.message)+'</div>'; }
+}
+
+// Olay kaydı
+async function addEvent(){
+  const box=$('#lg-probe'); box.innerHTML='<div class="loading">Kaydediliyor…</div>';
+  try{
+    const {data:ev} = await api('/api/events',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({student_id:$('#lg-id').value,raw_text:$('#lg-raw').value,student_label:$('#lg-name').value})});
+    if(ev.ai_probe_question){
+      box.innerHTML=`<div class="probe"><div class="q">⟡ ${esc(ev.ai_probe_question)}</div>
+        <div class="why">Belirsizlik: ${esc(ev.ambiguity_category)} — ${esc(ev.ambiguity_rationale||'')}</div>
+        <div class="voice">
+          <div class="box"><div class="lbl">Öğrencinin beyanı</div><textarea id="vs-${ev.event_id}" placeholder="Öğrenci ne dedi?"></textarea></div>
+          <div class="box"><div class="lbl">Öğretmenin yorumu</div><textarea id="vt-${ev.event_id}" placeholder="Sizin gözleminiz?"></textarea></div>
+        </div>
+        <button class="go" onclick="saveVoices('${ev.event_id}')">İki Sesi de Kaydet</button></div>`;
+    } else {
+      box.innerHTML=`<div class="probe" style="border-color:var(--green-soft);border-left-color:var(--green-soft);background:linear-gradient(180deg,rgba(63,107,58,.10),rgba(63,107,58,.04))">
+        <div class="q" style="color:var(--green)">✓ Net eylem kaydedildi</div>
+        <div class="why">${(ev.matched_evidences||[]).length} somut gösterge yakalandı. Belirsizlik yok, soru gerekmedi.</div></div>`;
+    }
+  }catch(e){ box.innerHTML='<div class="empty">Hata: '+esc(e.message)+'</div>'; }
+}
+async function saveVoices(id){
+  await api('/api/events/responses',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({event_id:id,student_statement:$('#vs-'+id).value,teacher_comment:$('#vt-'+id).value})});
+  $('#lg-probe').innerHTML='<div class="probe" style="border-color:var(--green-soft);border-left-color:var(--green-soft)"><div class="q" style="color:var(--green)">✓ İki ses de deftere işlendi</div><div class="why">Öğrenci beyanı ve öğretmen yorumu ayrı kanıt ağırlıklarıyla saklandı.</div></div>';
+}
+
+// Defter yükle
+async function loadLedger(){
+  const id=$('#lg-load').value;
+  const pe=$('#lg-pattern'), ee=$('#lg-events');
+  pe.innerHTML='<div class="loading">Örüntü hesaplanıyor…</div>'; ee.innerHTML='';
+  try{
+    const {data:p}=await api('/api/pattern/'+encodeURIComponent(id));
+    pe.innerHTML=`<div class="statgrid">
+      <div class="stat"><div class="n">${p.toplam_olay}</div><div class="l">Toplam Olay</div></div>
+      <div class="stat"><div class="n">${p.tutarlilik}</div><div class="l">Örüntü Tutarlılığı</div></div>
+      <div class="stat"><div class="n">${p.beyan_alinan_olay||0}</div><div class="l">Beyan Alınan</div></div>
+      <div class="stat"><div class="n">${p.cevapsiz_soru||0}</div><div class="l">Cevapsız Soru</div></div>
+    </div><div class="field"><div class="k">Örüntü Özeti</div><div class="v">${esc(p.yorum)}</div></div>`;
+    const {data:evs}=await api('/api/events/'+encodeURIComponent(id));
+    if(!evs.length){ ee.innerHTML='<div class="empty">Bu öğrenci için kayıt yok.</div>'; return; }
+    ee.innerHTML=evs.map(ev=>{
+      const t=new Date(ev.timestamp).toLocaleDateString('tr-TR');
+      const ch=(ev.matched_evidences||[]).map(m=>`<span class="chip ${m.pozitif_negatif==='Pozitif'?'val':m.pozitif_negatif==='Negatif'?'neg':'neu'}">${esc(m.deger)}</span>`).join('');
+      const voices = (ev.student_statement||ev.teacher_comment)?`<div class="voice">
+        <div class="box"><div class="lbl">Öğrenci</div><div class="txt">${esc(ev.student_statement||'—')}</div></div>
+        <div class="box"><div class="lbl">Öğretmen</div><div class="txt">${esc(ev.teacher_comment||'—')}</div></div></div>`:'';
+      const probe = ev.ai_probe_question?`<div class="why" style="margin-top:8px;color:var(--gold)">⟡ ${esc(ev.ambiguity_category)}: ${esc(ev.ai_probe_question)}</div>`:'';
+      return `<div class="event"><div class="top"><span class="raw">${esc(ev.raw_text)}</span><span class="meta">${t}</span></div>
+        <div style="margin-top:8px">${ch||'<span class="meta">somut gösterge yok</span>'}</div>${probe}${voices}</div>`;
+    }).join('');
+  }catch(e){ pe.innerHTML='<div class="empty">Hata: '+esc(e.message)+'</div>'; }
+}
+
+// Sene sonu
+let YR=null;
+async function loadYear(){
+  const id=$('#yr-id').value; const out=$('#yr-out');
+  out.innerHTML='<div class="loading">Kanıt birikimi okunuyor…</div>';
+  try{
+    const {data:y}=await api('/api/yearend/'+encodeURIComponent(id)); YR=y;
+    if(y.saved && y.is_locked){ renderSealed(y); return; }
+    out.innerHTML=`
+      <div class="scorebar"><div class="scoreval">${y.ai_predicted_score}</div>
+        <div><div class="band">${esc(y.ai_predicted_band||'')}</div>
+        <div style="margin-top:6px;font-size:12px;color:var(--ink-soft)">Beyin tahmini</div></div></div>
+      <div class="field"><div class="k">Gerekçe</div><div class="v">${esc(y.ai_rationale||'')}</div></div>
+      <div class="divider"></div>
+      <div class="range-row"><label style="margin:0">Öğretmen Puanı</label>
+        <input type="range" id="yr-score" min="0" max="100" value="${y.ai_predicted_score}">
+        <strong id="yr-sv" style="font-family:'Fraunces',serif;font-size:22px;min-width:34px">${y.ai_predicted_score}</strong></div>
+      <div id="yr-just"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="go" id="yr-confirm" onclick="submitVerdict('confirm')">Onayla</button>
+        <button class="go ghost" id="yr-override" style="display:none" onclick="submitVerdict('override')">Ezerek Kaydet</button>
+      </div>
+      <div class="hint" id="yr-hint">Puanı kanıttan farklı verirseniz gerekçe istenir ve silinemez damga basılır.</div>`;
+    const sc=$('#yr-score'), sv=$('#yr-sv'), conf=$('#yr-confirm'), ovr=$('#yr-override'), just=$('#yr-just'), hint=$('#yr-hint');
+    const ai=y.ai_predicted_score;
+    sc.oninput=()=>{ const v=+sc.value; sv.textContent=v;
+      if(v===ai){ conf.style.display=''; ovr.style.display='none'; just.innerHTML=''; hint.textContent='Kanıtla uyumlu. Onay yeterli, damga gerekmez.'; }
+      else{ conf.style.display='none'; ovr.style.display='';
+        if(!just.querySelector('textarea')) just.innerHTML='<label>Gerekçe (müfettiş, veli ve öğrenci görecek)</label><textarea id="yr-jt" placeholder="Kanıta rağmen neden farklı puan verdiğinizi yazın…"></textarea>';
+        hint.textContent=`${Math.abs(v-ai)} puan ayrışma. Ezme silinemez damgayla kaydedilecek.`; }
+    };
+  }catch(e){ out.innerHTML='<div class="empty">Hata: '+esc(e.message)+'</div>'; }
+}
+async function submitVerdict(action){
+  const id=$('#yr-id').value; const score=+($('#yr-score')?.value??0);
+  const just=$('#yr-jt')?.value||'';
+  try{
+    const {status,data:y}=await api('/api/yearend/verdict',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({student_id:id,action,teacher_score:score,justification:just})});
+    if(status===409){ alert('Bu kayıt mühürlü; değiştirilemez.'); return; }
+    renderSealed(y);
+  }catch(e){ alert('Hata: '+e.message); }
+}
+function renderSealed(y){
+  const out=$('#yr-out');
+  let stamp='';
+  if(y.override_flag){
+    stamp=`<div class="override"><div class="hd">⚠ ÖĞRETMEN MÜDAHALESİ — RESMİ KAYITTAN SİLİNEMEZ</div>
+      <div class="big">${esc(y.public_override_notice)}</div>
+      <div class="seen"><span>👁 Öğrenci</span><span>👁 Veli</span><span>👁 Müdür</span><span>👁 Müfettiş</span><span>🔒 Mühürlü</span></div></div>`;
+  } else {
+    stamp=`<div class="probe" style="border-color:var(--green-soft);border-left-color:var(--green-soft);background:linear-gradient(180deg,rgba(63,107,58,.10),rgba(63,107,58,.04))">
+      <div class="q" style="color:var(--green)">✓ Kanıtla uyumlu onaylandı</div>
+      <div class="why">Öğretmen beyin tahminini onayladı; müdahale damgası yok.</div>
+      <div class="seen"><span>🔒 Mühürlü</span></div></div>`;
+  }
+  out.innerHTML=`
+    <div class="scorebar"><div class="scoreval">${y.teacher_final_score}</div>
+      <div><div class="band">Nihai · ${esc(y.teacher_verdict)}</div>
+      <div style="margin-top:6px;font-size:12px;color:var(--ink-soft)">Beyin tahmini: ${y.ai_predicted_score}</div></div></div>
+    <div class="field"><div class="k">Beyin Gerekçesi</div><div class="v">${esc(y.ai_rationale||'')}</div></div>
+    ${y.teacher_justification?`<div class="field"><div class="k">Öğretmen Gerekçesi</div><div class="v" style="font-style:italic">"${esc(y.teacher_justification)}"</div></div>`:''}
+    ${stamp}`;
+}
+
+// Fabrika
+async function runFactory(){
+  const out=$('#fc-out'); out.innerHTML='<div class="loading">Korpus üretiliyor…</div>';
+  try{
+    const c=$('#fc-count').value, s=$('#fc-seed').value;
+    const {data:f}=await api(`/api/factory/preview?count=${c}&seed=${s}`);
+    const dist=Object.entries(f.deger_dagilimi).map(([k,v])=>`<span class="chip neu">${esc(k)}: ${v}</span>`).join('');
+    const ex=f.ornekler.map(r=>`<div class="event"><div class="raw" style="font-size:14px">${esc(r.davranis)}</div>
+      <div class="meta" style="margin-top:5px">${esc(r.id)} · ${esc(r.deger)} · ${esc(r.kademe)} · ${esc(r._mekan||'')}</div></div>`).join('');
+    out.innerHTML=`<div class="statgrid"><div class="stat"><div class="n">${f.uretilen}</div><div class="l">Üretilen Kayıt</div></div>
+      <div class="stat"><div class="n">${Object.keys(f.deger_dagilimi).length}</div><div class="l">Kapsanan Değer</div></div></div>
+      <div class="field"><div class="k">Değer Dağılımı</div><div>${dist}</div></div>
+      <div class="field"><div class="k">Örnek Üretimler</div>${ex}</div>`;
+  }catch(e){ out.innerHTML='<div class="empty">Hata: '+esc(e.message)+'</div>'; }
+}
+
+// Ontoloji
+function renderOnto(ont){
+  if(!ont){ $('#onto-out').innerHTML='<div class="empty">—</div>'; return; }
+  $('#onto-out').innerHTML=Object.entries(ont).map(([deger,node])=>`
+    <div class="event"><div class="top"><span class="raw">${esc(deger)}</span><span class="meta">${esc(node.ust_boyut)}</span></div>
+    <div style="margin-top:8px">${(node.alt_kategoriler||[]).map(a=>`<span class="chip neu">${esc(a)}</span>`).join('')}</div></div>`).join('');
+}
+</script>
+</body>
+</html>

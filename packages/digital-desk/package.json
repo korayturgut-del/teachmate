@@ -1,0 +1,7 @@
+{
+  "name": "@doa/digital-desk",
+  "version": "1.0.0-doa",
+  "private": true,
+  "main": "src/index.ts",
+  "description": "Dijital Masa state & iş mantığı — skor override, annotation, GradeOverridden event'i (ADR-016 profil verisi kaynağı)."
+}

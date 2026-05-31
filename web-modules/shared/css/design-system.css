@@ -1,0 +1,44 @@
+:root{
+  --bg0:#0a1214;--bg1:#0d181b;--bg2:#142226;--bg3:#1d3035;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);
+  --text:#eaf3f4;--text2:#8ba0a4;--text3:#4a5c60;
+  --accent:#14b8a6;--accent2:#5eead4;--accent-glow:rgba(20,184,166,.15);
+  --blue:#38a8d8;--blue2:#7dd3ec;--blue-glow:rgba(56,168,216,.15);
+  --green:#10b981;--green-glow:rgba(16,185,129,.12);
+  --amber:#f59e0b;--red:#ef4444;--purple:#5eead4;
+  --glass:rgba(255,255,255,0.03);--glass2:rgba(255,255,255,0.06);
+  --r:10px;--r2:16px;
+  --shadow:0 8px 32px rgba(0,0,0,.4);
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+/* Light Theme */
+[data-theme="light"]{
+  --bg0:#f5fafb;--bg1:#ffffff;--bg2:#eef5f6;--bg3:#dde9eb;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.15);
+  --text:#0f2a30;--text2:#48626a;--text3:#8aa0a6;
+  --accent:#0e7c86;--accent2:#14b8a6;--accent-glow:rgba(14,124,134,.1);
+  --blue:#1e6fb8;--blue2:#378add;--blue-glow:rgba(30,111,184,.1);
+  --green:#059669;--green-glow:rgba(5,150,105,.08);
+  --amber:#d97706;--red:#dc2626;--purple:#0e7c86;
+  --glass:rgba(0,0,0,0.02);--glass2:rgba(0,0,0,0.04);
+  --shadow:0 8px 32px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);
+  background:var(--bg0);
+  background-image:radial-gradient(at 0% 0%,rgba(20,184,166,0.12) 0px,transparent 50%),radial-gradient(at 100% 100%,rgba(56,168,216,0.08) 0px,transparent 50%);
+  background-attachment:fixed;
+  color:var(--text);
+  min-height:100vh;
+  font-size:14px;
+  line-height:1.6;
+  overflow-x:hidden;
+  letter-spacing:-0.01em;
+  -webkit-font-smoothing:antialiased;
+}
+/* Metin seçimi düzeltmesi - her yerde seçilebilir */
+::selection{background:rgba(20,184,166,0.3);color:#fff}
+::-moz-selection{background:rgba(20,184,166,0.3);color:#fff}

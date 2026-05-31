@@ -1,0 +1,46 @@
+# Secrets — ASLA commit etme
+.env
+*.pem
+*.key
+credentials.json
+service-account.json
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Build outputs
+dist/
+build/
+target/
+*.exe
+*.dmg
+*.AppImage
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+logs/
+*.log
+
+# Tauri
+src-tauri/target/
+
+# Docker
+docker-compose.override.yml

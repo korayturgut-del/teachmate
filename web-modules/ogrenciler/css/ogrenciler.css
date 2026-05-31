@@ -1,0 +1,22 @@
+/* ===== ÖĞRENCİ MODÜLÜ CSS — Kelebek Platform V2 ===== */
+
+/* Student table enhancements */
+#student-table table { width: 100%; border-collapse: collapse; }
+#student-table th { font-size: .75rem; color: var(--text2); padding: 6px 8px; text-align: left; font-weight: 600; }
+#student-table td { padding: 5px 8px; font-size: .82rem; border-bottom: 1px solid var(--border); }
+
+/* Class tabs */
+#class-tabs > div { transition: all .15s; }
+#class-tabs > div:hover { border-color: var(--accent) !important; }
+
+/* Student panel card */
+#student-panel { animation: fadeUp .3s cubic-bezier(.4,0,.2,1); }
+
+/* Bulk input */
+#bulk-input { font-family: var(--mono); font-size: .78rem; line-height: 1.5; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  #student-panel .fg-2 { grid-template-columns: 1fr; }
+  .module-container { padding: 12px; }
+}

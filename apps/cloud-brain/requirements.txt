@@ -1,0 +1,32 @@
+# Dijital Öğretmen Asistanı — Cloud Brain Requirements
+# Phase 3: DeepSeek + PaddleOCR gerçek entegrasyonu
+
+# ── Web Framework ────────────────────────────────────────────
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+
+# ── Database (SQLite) ───────────────────────────────────────
+sqlalchemy[asyncio]==2.0.30
+aiosqlite==0.20.0
+
+# ── HTTP Client ─────────────────────────────────────────────
+httpx==0.27.0
+
+# ── Validation & Config ─────────────────────────────────────
+pydantic==2.7.1
+pydantic-settings==2.3.0
+
+# ── AI & LLM ────────────────────────────────────────────────
+openai>=1.30.0           # DeepSeek SDK (OpenAI uyumlu)
+
+# ── OCR ─────────────────────────────────────────────────────
+paddleocr>=2.8.0         # Yerel OCR motoru
+onnxruntime>=1.18.0      # ONNX runtime (PaddleOCR bağımlılığı)
+Pillow>=10.0.0           # Görüntü işleme
+numpy>=1.24.0            # Sayısal işlemler
+
+# ── File Upload ─────────────────────────────────────────────
+python-multipart==0.0.9
+
+# ── Environment ─────────────────────────────────────────────
+python-dotenv==1.0.1

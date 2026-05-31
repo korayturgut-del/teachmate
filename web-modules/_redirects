@@ -1,0 +1,3 @@
+# Cloudflare Pages yönlendirmeleri
+# /api/* zaten Worker route'u tarafından yakalanır (Pages'e düşmez).
+# Bu dosya ileride gerekirse özel yönlendirmeler için.

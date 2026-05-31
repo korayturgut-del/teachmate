@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>📊 Maarif Performans — Dijital Öğretmen Asistanı</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<!-- Dijital Öğretmen Asistanı ortak tasarım -->
+<link rel="stylesheet" href="../shared/css/design-system.css">
+<link rel="stylesheet" href="../shared/css/layout.css">
+<link rel="stylesheet" href="../shared/css/components.css">
+<link rel="stylesheet" href="../shared/css/enhance.css">
+<!-- Modül stili -->
+<link rel="stylesheet" href="css/maarif-performans.css">
+</head>
+<body>
+
+<!-- ====== DÖA TOPBAR ====== -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-left">
+      <a href="../index.html" class="topbar-brand"
+         style="text-decoration:none;color:var(--text)">🦋 Asistan</a>
+      <span style="color:var(--text3);margin:0 8px">›</span>
+      <span class="topbar-page">📊 Maarif Performans</span>
+    </div>
+    <div class="topbar-right">
+      <span id="perf-ai-status" class="perf-ai-badge">⚪ AI kontrol ediliyor…</span>
+      <button class="btn btn-ghost btn-sm"
+              onclick="location.href='../index.html'">🏠 Hub</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== ANA İÇERİK ====== -->
+<div class="perf-layout">
+
+  <!-- SOL: Öğrenci Paneli -->
+  <div class="perf-panel">
+    <div class="perf-panel-title">👥 Öğrenci Seç</div>
+
+    <select id="perf-class" class="perf-select">
+      <option value="">Yükleniyor…</option>
+    </select>
+
+    <div id="perf-student-list" class="perf-student-list">
+      <!-- perfRenderStudentList() doldurur -->
+    </div>
+
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+      <div class="perf-panel-title" style="margin-bottom:6px">📅 Dönem</div>
+      <select id="perf-term" class="perf-select" style="margin:0">
+        <option value="2025-2026-1">2025-2026 · 1. Dönem</option>
+        <option value="2025-2026-2">2025-2026 · 2. Dönem</option>
+        <option value="2026-2027-1">2026-2027 · 1. Dönem</option>
+        <option value="2026-2027-2">2026-2027 · 2. Dönem</option>
+      </select>
+    </div>
+
+    <div class="perf-hint" style="margin-top:10px">
+      Öğrenci listesi
+      <a href="../ogrenciler/index.html" class="perf-link">Öğrenciler</a>
+      modülünden gelir.
+    </div>
+  </div>
+
+  <!-- SAĞ: Not Defteri -->
+  <div class="perf-panel">
+    <div class="perf-panel-title">📊 Süreç Odaklı Değerlendirme</div>
+
+    <div id="perf-grade-grid" class="perf-grade-grid">
+      <!-- gradeBookRender() doldurur -->
+    </div>
+
+    <div id="perf-grade-avg" class="perf-grade-avg" style="display:none">
+      <!-- gradeBookRender() doldurur -->
+    </div>
+  </div>
+
+</div>
+
+<!-- ====== MODÜL JS — sıralı yükleme ====== -->
+<!-- Bağımsız çalışabilir: shared/js/* opsiyoneldir -->
+<script src="../shared/js/app-core.js" onerror="console.info('shared yok — bağımsız mod')"></script>
+<script src="js/perf-core.js"></script>
+<script src="js/perf-gradebook.js"></script>
+<script src="js/perf-ai.js"></script>
+<script src="js/perf-app.js"></script>
+
+</body>
+</html>
